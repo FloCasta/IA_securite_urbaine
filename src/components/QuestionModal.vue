@@ -19,7 +19,7 @@
         <div class="text_answer_modal" v-show="answerPage">Réponse : {{ textAnswer }}</div>
       </div>
       <div class='btn_submit_modal'>
-        <button class="btn_previous" @click="submit" v-show="!answerPage">Précédent</button>
+        <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
         <button class="btn_next" @click="submit" v-show="!answerPage">Suivant</button>
         <button class="btn_return" @click="submit" v-show="answerPage">Retour</button>
       </div>
@@ -40,6 +40,8 @@ interface Answer {
 }
 const props = defineProps({
   id: { type: String, required: true },
+  next: { type: Function, required: true },
+  previous: { type: Function, required: true },
   title: String,
   question: String,
   answers: Array<Answer>,
@@ -59,8 +61,14 @@ const clickAnswer = (a: number) => {
   }
 }
 
+const previous = () =>{
+  store.toggleQuestionModal;
+  props.previous();
+}
+
 const submit = () => {
   store.toggleQuestionModal;
+  props.next();
 }
 
 </script>

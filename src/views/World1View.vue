@@ -9,7 +9,9 @@
             <img src="/world1/castle3.png" alt="castle3" id="castle3" @click="movePlayer('castle3')">
             <img :src="`/players/player${store.avatarId}.png`" alt="player" id="player">
         </div>
-        <Modals world="world1" :v-show="store.isModalsVisible"></Modals>
+
+        <Modals ref="modal" world="world1" :v-show="store.isModalsVisible"></Modals>
+
     </div>
 </template>
 
@@ -18,8 +20,12 @@ import { useAlertsStore } from '@/store';
 import HomeBanner from '@/components/HomeBanner.vue';
 import BannerMenu from '@/components/BannerMenu.vue';
 import Modals from '@/components/Modals.vue';
+import { ref} from 'vue';
 
 const store = useAlertsStore();
+
+const nLevel = ref(1);
+const modal = ref<any>(null);
 
 function movePlayer(castleName: string) {
     var castle = document.getElementById(castleName);
@@ -50,10 +56,15 @@ function movePlayer(castleName: string) {
     }
 
     setTimeout(() => {
-        store.toggleModals();
+        nLevel.value = parseInt(castleName.charAt(castleName.length - 1));
+        if(nLevel.value>0){
+            modal.value?.launchLevel(nLevel.value, store.scoreWorld1[nLevel.value-2]);
+        }
+        
     }, 1500);
 
 }
+ 
 </script>
 
 <style>

@@ -27,7 +27,7 @@
         <div class="text_answer_modal" v-show="answerPage">Réponse : {{ textAnswer }}</div>
       </div>
       <div class='btn_submit_modal'>
-        <button class="btn_previous" @click="submit" v-show="!answerPage">Précédent</button>
+        <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
         <button class="btn_next" @click="submit" v-show="!answerPage">Suivant</button>
         <button class="btn_return" @click="submit" v-show="answerPage">Retour</button>
       </div>
@@ -44,6 +44,8 @@ const store = useAlertsStore();
 
 const props = defineProps({
   id: { type: String, required: true },
+  next: { type: Function, required: true },
+  previous: { type: Function, required: true },
   title: String,
   question: String,
   answers: Array,
@@ -59,8 +61,14 @@ function onMove() {
   if (selectedAnswer.value.length == 4) return false
 };
 
+const previous = () =>{
+  store.toggleDragAndDropModal;
+  props.previous();
+}
+
 const submit = () => {
   store.toggleDragAndDropModal;
+  props.next();
 }
 
 </script>
