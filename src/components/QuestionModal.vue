@@ -5,7 +5,7 @@
       <div class="head_modal">
         <div class="title_modal">
           <h2>{{ props.title }}</h2>
-        </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleQuestionModal" />
+        </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleQuestionModal(false)" />
       </div>
       <div class='main_modal'>
         <p>Question</p>
@@ -40,6 +40,8 @@ interface Answer {
 }
 const props = defineProps({
   id: { type: String, required: true },
+  next: { type: Function, required: true },
+  nextQ: Number,
   title: String,
   question: String,
   answers: Array<Answer>,
@@ -60,7 +62,8 @@ const clickAnswer = (a: number) => {
 }
 
 const submit = () => {
-  store.toggleQuestionModal;
+  store.toggleQuestionModal(false);
+  props.next(props.nextQ);
 }
 
 </script>

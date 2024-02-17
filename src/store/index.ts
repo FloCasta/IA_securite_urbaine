@@ -13,6 +13,8 @@ export const useAlertsStore = defineStore('alerts', {
       isHeightQuestionModalVisible: sessionStorage.getItem('isHeightQuestionModalVisible') === 'true',
       isEstimationModalVisible: sessionStorage.getItem('isEstimationModalVisible') === 'true',
       isCaptchaModalVisible: sessionStorage.getItem('isCaptchaModalVisible') === 'true',
+      isLevelEntranceModalVisible: sessionStorage.getItem('isLevelEntranceModalVisible') === 'true',
+      scoreWorld1: JSON.parse(sessionStorage.getItem('scoreWorld1') || "[0,0,0]" ) ,
     };
   },
   actions: {
@@ -32,16 +34,16 @@ export const useAlertsStore = defineStore('alerts', {
       this.isMenuVisible = !this.isMenuVisible
       sessionStorage.setItem('isMenuVisible', this.isMenuVisible ? 'true' : 'false');
     },
-    toggleHolySentenceModal() {
-      this.isHolySentenceModalVisible = !this.isHolySentenceModalVisible;
+    toggleHolySentenceModal(openClose:boolean) {
+      this.isHolySentenceModalVisible = openClose;
       sessionStorage.setItem('isHolySentenceModalVisible', this.isHolySentenceModalVisible ? 'true' : 'false');
     },
-    toggleQuestionModal() {
-      this.isQuestionModalVisible = !this.isQuestionModalVisible;
+    toggleQuestionModal(openClose:boolean) {
+      this.isQuestionModalVisible = openClose;
       sessionStorage.setItem('isQuestionModalVisible', this.isQuestionModalVisible ? 'true' : 'false');
     },
-    toggleDragAndDropModal() {
-      this.isDragAndDropModalVisible = !this.isDragAndDropModalVisible;
+    toggleDragAndDropModal(openClose:boolean) {
+      this.isDragAndDropModalVisible = openClose;
       sessionStorage.setItem('isDragAndDropModalVisible', this.isDragAndDropModalVisible ? 'true' : 'false');
     },
     toggleHeightQuestionModal() {
@@ -56,5 +58,13 @@ export const useAlertsStore = defineStore('alerts', {
       this.isCaptchaModalVisible = !this.isCaptchaModalVisible;
       sessionStorage.setItem('isCaptchaModalVisible', this.isCaptchaModalVisible ? 'true' : 'false');
     },
+    toggleLevelEntranceModalVisible(openClose:boolean) {
+      this.isLevelEntranceModalVisible = openClose;
+      sessionStorage.setItem('isLevelEntranceModalVisible', this.isLevelEntranceModalVisible ? 'true' : 'false');
+    },
+    setScoreWorld1(newScore:[]){
+      this.scoreWorld1 = newScore;
+      sessionStorage.setItem('scoreWorld1', JSON.stringify(this.scoreWorld1));
+    }
   },
 })

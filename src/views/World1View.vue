@@ -9,13 +9,14 @@
             <img src="/world1/castle3.png" alt="castle3" id="castle3" @click="movePlayer('castle3')">
             <img :src="`/players/player${store.avatarId}.png`" alt="player" id="player">
         </div>
-        <HolySentenceModal :id=form3.id :title=form3.title :start_question=form3.start_question
-            :end_question=form3.end_question :holy_word=form3.holy_word :textAnswer=form3.textAnswer
-            v-show="store.isHolySentenceModalVisible"></HolySentenceModal>
-        <QuestionModal :id=form2.id :title=form2.title :question=form2.question :answers=form2.answers
-            :textAnswer=form2.textAnswer v-show="store.isQuestionModalVisible"></QuestionModal>
-        <DragAndDropModal :id=form1.id :title=form1.title :question=form1.question :answers=form1.answers
-            :textAnswer=form1.textAnswer v-show="store.isDragAndDropModalVisible"></DragAndDropModal>
+        <LevelEntranceModal v-show="store.isLevelEntranceModalVisible" ></LevelEntranceModal>
+        <HolySentenceModal :nextQ=nextQ :next=next :id=formHs.id :title=formHs.title :start_question=formHs.start_question
+            :end_question=formHs.end_question :holy_word=formHs.holy_word correctAnswer="[]" :textAnswer=formHs.textAnswer
+            v-show="store.isHolySentenceModalVisible" ></HolySentenceModal>
+        <QuestionModal :nextQ=nextQ :next=next :id=formQuestion.id :title=formQuestion.title :question=formQuestion.question :answers=formQuestion.answers
+            :textAnswer=formQuestion.textAnswer v-show="store.isQuestionModalVisible"></QuestionModal>
+        <DragAndDropModal :nextQ=nextQ :next=next :id=formDaD.id :title=formDaD.title :question=formDaD.question :answers=formDaD.answers correctAnswer="[]"
+            :textAnswer=formDaD.textAnswer v-show="store.isDragAndDropModalVisible"></DragAndDropModal>
         <HeightQuestionModal :id=form4.id :title=form4.title :question=form4.question :answers=form4.answers
             :textAnswer=form4.textAnswer v-show="store.isHeightQuestionModalVisible">
         </HeightQuestionModal>
@@ -39,10 +40,13 @@ import DragAndDropModal from '@/components/DragAndDropModal.vue';
 import HeightQuestionModal from '@/components/HeightQuestionModal.vue';
 import EstimationModal from '@/components/EstimationModal.vue';
 import CaptchaModal from '@/components/CaptchaModal.vue';
+import { ref } from 'vue';
+import type LevelEntranceModalVue from '@/components/LevelEntranceModal.vue';
+import LevelEntranceModal from '@/components/LevelEntranceModal.vue';
 
 const store = useAlertsStore();
 
-const form1 = {
+const t ={
     "id": "1",
     "title": "Glisser déposer",
     "type": "draganddrop",
@@ -56,7 +60,7 @@ const form1 = {
     "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
 };
 
-const form2 = {
+const q = {
     "id": "2",
     "title": "Question à choix multiples",
     "type": "question",
@@ -68,9 +72,8 @@ const form2 = {
         { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
     ],
     "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
-};
-
-const form3 = {
+}
+const h={
     "id": "3",
     "title": "Phrase à trou",
     "type": "holysentence",
@@ -80,7 +83,15 @@ const form3 = {
     "textAnswer": "La bonne réponse est vidéosurveillance"
 };
 
-const form4 = {
+let nextQ = ref(1); // Current question number
+
+let formDaD =ref(t);
+//alert(store.scoreWorld1);
+let formQuestion = ref(q);
+
+let formHs = ref(h);
+
+let form4 = {
     "id": "4",
     "title": "Question à choix multiples",
     "type": "jeu_selection",
@@ -97,6 +108,10 @@ const form4 = {
     ],
     "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
 };
+const listQuestions = [form4,t,h,q,h,q,
+                            t,h,t,q,t,
+                            h,t,q,t,q];
+let currentQuestions = [form4,t,h,q,h,q];
 
 const form5 = {
     "id": "5",
@@ -155,15 +170,37 @@ function movePlayer(castleName: string) {
     }
 
     setTimeout(() => {
-        // store.toggleHolySentenceModal();
-        // store.toggleQuestionModal();
-        // store.toggleDragAndDropModal();
+        //Here launch casttle n
+        const n = parseInt(castleName.charAt(castleName.length - 1));
+        //Le +1 c'est pour la liste du json
+        store.toggleLevelEntranceModalVisible(true);
+        next(1+(n-1)*5);
         // store.toggleHeightQuestionModal();
         store.toggleEstimationModal();
         // store.toggleCaptchaModal();
     }, 1500);
 
 }
+
+const next = (n:number) =>{
+    //faire un truc avec le nextQ pour que le next soit la page de resultat
+    nextQ.value=(n+1);
+    switch(listQuestions[n].type){
+        case "draganddrop":
+            formDaD = listQuestions[n];
+            store.toggleDragAndDropModal(true);
+            break;
+        case "question":
+            formQuestion = listQuestions[n];
+            store.toggleQuestionModal(true);
+            break;
+        case "holysentence":
+            formHs = listQuestions[n];
+            store.toggleHolySentenceModal(true);
+            break;
+    }
+}
+    
 </script>
 
 <style>

@@ -5,7 +5,7 @@
       <div class="head_modal">
         <div class="title_modal">
           <h2>{{ props.title }}</h2>
-        </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleHolySentenceModal" />
+        </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleHolySentenceModal(false)" />
       </div>
       <div class='main_modal'>
         <p>Question</p>
@@ -34,6 +34,8 @@ const store = useAlertsStore();
 
 const props = defineProps({
   id: { type: String, required: true },
+  next: { type: Function, required: true },
+  nextQ: Number,
   title: String,
   start_question: String,
   end_question: String,
@@ -46,7 +48,8 @@ const selectedAnswer = ref<string>("");
 const answerPage = false;
 
 const submit = () => {
-  store.toggleHolySentenceModal;
+  store.toggleHolySentenceModal(false);
+  props.next(props.nextQ);
 }
 
 </script>
