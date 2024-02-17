@@ -8,7 +8,7 @@
           </div>
           <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleResultModalVisible(false)" />
         </div>
-        <button class="btn_start" @click="submit">Commencer</button>
+        <button class="btn_start" @click="submit">mettre 4/5 premier niveau</button>
         <p>You did it</p>
       </div>
     </Transition>

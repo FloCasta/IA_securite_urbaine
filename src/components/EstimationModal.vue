@@ -6,7 +6,7 @@
                 <div class="title_modal">
                     <h2>{{ props.title }}</h2>
                 </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png'
-                    @click="store.toggleEstimationModal" />
+                    @click="store.toggleEstimationModal(false)" />
             </div>
             <div class='main_modal'>
                 <p>Question</p>
@@ -40,6 +40,7 @@ import { useAlertsStore } from '@/store';
 const store = useAlertsStore();
 const props = defineProps({
     id: { type: String, required: true },
+    next: { type: Function, required: true },
     title: String,
     question: String,
     minNumber: Number,
@@ -63,7 +64,8 @@ const updateSliderPosition = (event: any) => {
 }
 
 const submit = () => {
-    store.toggleEstimationModal;
+    store.toggleEstimationModal(false);
+    props.next();
 }
 
 </script>

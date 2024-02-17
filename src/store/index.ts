@@ -51,8 +51,8 @@ export const useAlertsStore = defineStore('alerts', {
       this.isHeightQuestionModalVisible = !this.isHeightQuestionModalVisible;
       sessionStorage.setItem('isHeightQuestionModalVisible', this.isHeightQuestionModalVisible ? 'true' : 'false');
     },
-    toggleEstimationModal() {
-      this.isEstimationModalVisible = !this.isEstimationModalVisible;
+    toggleEstimationModal(openClose:boolean) {
+      this.isEstimationModalVisible = openClose;
       sessionStorage.setItem('isEstimationModalVisible', this.isEstimationModalVisible ? 'true' : 'false');
     },
     toggleCaptchaModal() {
