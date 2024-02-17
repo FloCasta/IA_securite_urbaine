@@ -35,7 +35,6 @@ const store = useAlertsStore();
 const props = defineProps({
   id: { type: String, required: true },
   next: { type: Function, required: true },
-  nextQ: Number,
   title: String,
   start_question: String,
   end_question: String,
@@ -49,7 +48,7 @@ const answerPage = false;
 
 const submit = () => {
   store.toggleHolySentenceModal(false);
-  props.next(props.nextQ);
+  props.next();
 }
 
 </script>

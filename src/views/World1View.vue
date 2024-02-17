@@ -9,13 +9,15 @@
             <img src="/world1/castle3.png" alt="castle3" id="castle3" @click="movePlayer('castle3')">
             <img :src="`/players/player${store.avatarId}.png`" alt="player" id="player">
         </div>
-        <LevelEntranceModal v-show="store.isLevelEntranceModalVisible" ></LevelEntranceModal>
-        <HolySentenceModal :nextQ=nextQ :next=next :id=formHs.id :title=formHs.title :start_question=formHs.start_question
+        <LevelEntranceModal ref="myChild" :nLevel=nLevel :launchLevel=launchLevel :title=levelTitle v-show="store.isLevelEntranceModalVisible" ></LevelEntranceModal>
+        <ResultModal v-show="store.isResultModalVisible"></ResultModal>
+        
+        <HolySentenceModal :next=next :id=formHs.id :title=formHs.title :start_question=formHs.start_question
             :end_question=formHs.end_question :holy_word=formHs.holy_word correctAnswer="[]" :textAnswer=formHs.textAnswer
             v-show="store.isHolySentenceModalVisible" ></HolySentenceModal>
-        <QuestionModal :nextQ=nextQ :next=next :id=formQuestion.id :title=formQuestion.title :question=formQuestion.question :answers=formQuestion.answers
+        <QuestionModal :next=next :id=formQuestion.id :title=formQuestion.title :question=formQuestion.question :answers=formQuestion.answers
             :textAnswer=formQuestion.textAnswer v-show="store.isQuestionModalVisible"></QuestionModal>
-        <DragAndDropModal :nextQ=nextQ :next=next :id=formDaD.id :title=formDaD.title :question=formDaD.question :answers=formDaD.answers correctAnswer="[]"
+        <DragAndDropModal :next=next :id=formDaD.id :title=formDaD.title :question=formDaD.question :answers=formDaD.answers correctAnswer="[]"
             :textAnswer=formDaD.textAnswer v-show="store.isDragAndDropModalVisible"></DragAndDropModal>
         <HeightQuestionModal :id=form4.id :title=form4.title :question=form4.question :answers=form4.answers
             :textAnswer=form4.textAnswer v-show="store.isHeightQuestionModalVisible">
@@ -40,11 +42,15 @@ import DragAndDropModal from '@/components/DragAndDropModal.vue';
 import HeightQuestionModal from '@/components/HeightQuestionModal.vue';
 import EstimationModal from '@/components/EstimationModal.vue';
 import CaptchaModal from '@/components/CaptchaModal.vue';
-import { ref } from 'vue';
 import type LevelEntranceModalVue from '@/components/LevelEntranceModal.vue';
+import { ref, type Ref } from 'vue';
 import LevelEntranceModal from '@/components/LevelEntranceModal.vue';
+import ResultModal from '@/components/ResultModal.vue';
 
 const store = useAlertsStore();
+
+const nLevel = ref(1);
+const levelTitle = ref("Level x");
 
 const t ={
     "id": "1",
@@ -82,14 +88,44 @@ const h={
     "holy_word": "vidéosurveillance",
     "textAnswer": "La bonne réponse est vidéosurveillance"
 };
-
+const myChild = ref<any>(null);
 let nextQ = ref(1); // Current question number
 
-let formDaD =ref(t);
+let formDaD: Ref<{
+  id: string;
+  title: string;
+  type: string;
+  question: string;
+  answers: {
+    id: number;
+    answer: string;
+    response: boolean;
+  }[];
+  textAnswer: string;
+}>=ref(t);
 //alert(store.scoreWorld1);
-let formQuestion = ref(q);
+let formQuestion: Ref<{
+  id: string;
+  title: string;
+  type: string;
+  question: string;
+  answers: {
+    id: number;
+    answer: string;
+    response: boolean;
+  }[];
+  textAnswer: string;
+}> = ref(q);
 
-let formHs = ref(h);
+let formHs: Ref<{
+  id: string;
+  title: string;
+  type: string;
+  start_question: string,
+  end_question:string,
+  holy_word:string,
+  textAnswer: string;
+}> = ref(h);
 
 let form4 = {
     "id": "4",
@@ -108,10 +144,10 @@ let form4 = {
     ],
     "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
 };
-const listQuestions = [form4,t,h,q,h,q,
-                            t,h,t,q,t,
-                            h,t,q,t,q];
-let currentQuestions = [form4,t,h,q,h,q];
+const listQuestions = [t,h,q,h,q,
+                        t,h,t,q,t,
+                        h,t,q,t,q];
+let currentQuestions = [t,h,q,h,q];
 
 const form5 = {
     "id": "5",
@@ -170,34 +206,48 @@ function movePlayer(castleName: string) {
     }
 
     setTimeout(() => {
-        //Here launch casttle n
-        const n = parseInt(castleName.charAt(castleName.length - 1));
-        //Le +1 c'est pour la liste du json
-        store.toggleLevelEntranceModalVisible(true);
-        next(1+(n-1)*5);
+        nLevel.value = parseInt(castleName.charAt(castleName.length - 1));
+        if(nLevel.value>0){
+            levelTitle.value = "Level " + nLevel.value
+            store.toggleLevelEntranceModalVisible(true);
+            myChild.value?.updateStars(store.scoreWorld1[nLevel.value-1],store.scoreWorld1[nLevel.value-2]);
+        }
         // store.toggleHeightQuestionModal();
-        store.toggleEstimationModal();
+        //store.toggleEstimationModal();
         // store.toggleCaptchaModal();
     }, 1500);
 
 }
 
-const next = (n:number) =>{
-    //faire un truc avec le nextQ pour que le next soit la page de resultat
-    nextQ.value=(n+1);
-    switch(listQuestions[n].type){
-        case "draganddrop":
-            formDaD = listQuestions[n];
-            store.toggleDragAndDropModal(true);
-            break;
-        case "question":
-            formQuestion = listQuestions[n];
-            store.toggleQuestionModal(true);
-            break;
-        case "holysentence":
-            formHs = listQuestions[n];
-            store.toggleHolySentenceModal(true);
-            break;
+const launchLevel = (nLevel: number)=>{
+    currentQuestions=[]
+    for (let i=0;i<5;i++){
+        currentQuestions[i] = listQuestions[i+(5*(nLevel-1))]
+    }
+    nextQ.value = 0;
+    next()
+}
+
+const next = () =>{
+    nextQ.value=nextQ.value+1;
+    if(currentQuestions[nextQ.value-1]){
+        switch(currentQuestions[nextQ.value-1].type){
+            case "draganddrop":
+                formDaD = currentQuestions[nextQ.value-1];
+                store.toggleDragAndDropModal(true);
+                break;
+            case "question":
+                formQuestion = currentQuestions[nextQ.value-1];
+                store.toggleQuestionModal(true);
+                break;
+            case "holysentence":
+                formHs = currentQuestions[nextQ.value-1];
+                store.toggleHolySentenceModal(true);
+                break;
+        }
+    }
+    else{
+        store.toggleResultModalVisible(true);
     }
 }
     

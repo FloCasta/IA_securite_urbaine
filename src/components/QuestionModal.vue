@@ -41,7 +41,6 @@ interface Answer {
 const props = defineProps({
   id: { type: String, required: true },
   next: { type: Function, required: true },
-  nextQ: Number,
   title: String,
   question: String,
   answers: Array<Answer>,
@@ -63,7 +62,7 @@ const clickAnswer = (a: number) => {
 
 const submit = () => {
   store.toggleQuestionModal(false);
-  props.next(props.nextQ);
+  props.next();
 }
 
 </script>

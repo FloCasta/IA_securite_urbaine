@@ -45,7 +45,6 @@ const store = useAlertsStore();
 const props = defineProps({
   id: { type: String, required: true },
   next: { type: Function, required: true },
-  nextQ: Number,
   title: String,
   question: String,
   answers: Array,
@@ -63,7 +62,7 @@ function onMove() {
 
 const submit = () => {
   store.toggleDragAndDropModal(false);
-  props.next(props.nextQ);
+  props.next();
 }
 
 </script>

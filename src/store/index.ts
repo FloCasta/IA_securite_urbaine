@@ -14,6 +14,7 @@ export const useAlertsStore = defineStore('alerts', {
       isEstimationModalVisible: sessionStorage.getItem('isEstimationModalVisible') === 'true',
       isCaptchaModalVisible: sessionStorage.getItem('isCaptchaModalVisible') === 'true',
       isLevelEntranceModalVisible: sessionStorage.getItem('isLevelEntranceModalVisible') === 'true',
+      isResultModalVisible: sessionStorage.getItem('isResultModalVisible') === 'true',
       scoreWorld1: JSON.parse(sessionStorage.getItem('scoreWorld1') || "[0,0,0]" ) ,
     };
   },
@@ -62,7 +63,11 @@ export const useAlertsStore = defineStore('alerts', {
       this.isLevelEntranceModalVisible = openClose;
       sessionStorage.setItem('isLevelEntranceModalVisible', this.isLevelEntranceModalVisible ? 'true' : 'false');
     },
-    setScoreWorld1(newScore:[]){
+    toggleResultModalVisible(openClose:boolean) {
+      this.isResultModalVisible = openClose;
+      sessionStorage.setItem('isResultModalVisible', this.isResultModalVisible ? 'true' : 'false');
+    },
+    setScoreWorld1(newScore:number[]){
       this.scoreWorld1 = newScore;
       sessionStorage.setItem('scoreWorld1', JSON.stringify(this.scoreWorld1));
     }
