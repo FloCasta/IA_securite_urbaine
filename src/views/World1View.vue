@@ -12,22 +12,22 @@
         <LevelEntranceModal ref="levelEntrance" :nLevel=nLevel :launchLevel=launchLevel :title=levelTitle v-show="store.isLevelEntranceModalVisible" ></LevelEntranceModal>
         <ResultModal v-show="store.isResultModalVisible"></ResultModal>
         
-        <HolySentenceModal :next=next :id=formHs.id :title=formHs.title :start_question=formHs.start_question
+        <HolySentenceModal :previous=previous :next=next :id=formHs.id :title=formHs.title :start_question=formHs.start_question
             :end_question=formHs.end_question :holy_word=formHs.holy_word correctAnswer="[]" :textAnswer=formHs.textAnswer
             v-show="store.isHolySentenceModalVisible" ></HolySentenceModal>
-        <QuestionModal :next=next :id=formQuestion.id :title=formQuestion.title :question=formQuestion.question :answers=formQuestion.answers
+        <QuestionModal :previous=previous :next=next :id=formQuestion.id :title=formQuestion.title :question=formQuestion.question :answers=formQuestion.answers
             :textAnswer=formQuestion.textAnswer v-show="store.isQuestionModalVisible"></QuestionModal>
-        <DragAndDropModal :next=next :id=formDaD.id :title=formDaD.title :question=formDaD.question :answers=formDaD.answers correctAnswer="[]"
+        <DragAndDropModal :previous=previous :next=next :id=formDaD.id :title=formDaD.title :question=formDaD.question :answers=formDaD.answers correctAnswer="[]"
             :textAnswer=formDaD.textAnswer v-show="store.isDragAndDropModalVisible"></DragAndDropModal>
         <HeightQuestionModal :id=form4.id :title=form4.title :question=form4.question :answers=form4.answers
             :textAnswer=form4.textAnswer v-show="store.isHeightQuestionModalVisible">
         </HeightQuestionModal>
-        <EstimationModal :next=next :id=formEstimation.id :title=formEstimation.title :question=formEstimation.question :minNumber=formEstimation.minNumber
+        <EstimationModal :previous=previous :next=next :id=formEstimation.id :title=formEstimation.title :question=formEstimation.question :minNumber=formEstimation.minNumber
             :maxNumber=formEstimation.maxNumber :minAnswer=formEstimation.minAnswer :maxAnswer=formEstimation.maxAnswer :increment=formEstimation.increment
             :textAnswer=formEstimation.textAnswer v-show="store.isEstimationModalVisible">
         </EstimationModal>
-        <CaptchaModal :id=form6.id :title=form6.title :question=form6.question :answers=form6.answers
-            :textAnswer=form6.textAnswer v-show="store.isCaptchaModalVisible">
+        <CaptchaModal :previous=previous :next=next :id=formCaptcha.id :title=formCaptcha.title :question=formCaptcha.question :answers=formCaptcha.answers
+            :textAnswer=formCaptcha.textAnswer v-show="store.isCaptchaModalVisible">
         </CaptchaModal>
     </div>
 </template>
@@ -109,6 +109,24 @@ const e={
     "textAnswer": "En effet, entre 21 et 30 jours est la bonne réponse"
 };
 
+
+const c= {
+    "id": "4",
+    "title": "Captcha",
+    "type": "jeu_captcha",
+    "question": "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
+    "answers": [
+        { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png", "response": true },
+        { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png", "response": true },
+        { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png", "response": true },
+        { "id": 4, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png", "response": true },
+        { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png", "response": false },
+        { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png", "response": false }
+    ],
+    "textAnswer": "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
+}
+
+
 //test purpose
 let formEstimation : Ref<{
   id: string;
@@ -142,28 +160,24 @@ let form4 = {
     "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
 };
 
-
-
-const form6 = {
-    "id": "4",
-    "title": "Captcha",
-    "type": "jeu_captcha",
-    "question": "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
-    "answers": [
-        { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png", "response": true },
-        { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png", "response": true },
-        { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png", "response": true },
-        { "id": 4, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png", "response": true },
-        { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png", "response": false },
-        { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png", "response": false }
-    ],
-    "textAnswer": "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
-};
+let formCaptcha: Ref<{
+  id: string;
+  title: string;
+  type: string;
+  question: string;
+  answers: {
+    id: number;
+    answer: string;
+    img: string;
+    response: boolean;
+  }[];
+  textAnswer: string;
+}>=ref(c);
 
 //test purpose
-const listQuestions = [e,h,t,h,q,
-                        t,h,t,q,t,
-                        h,t,q,t,q];
+const listQuestions = [e,h,t,c,q,
+                        c,e,t,q,t,
+                        h,c,q,e,q];
 
                         
 let currentQuestions = [t,t,t,t,t];
@@ -243,7 +257,6 @@ function movePlayer(castleName: string) {
         }
 
         // store.toggleHeightQuestionModal();
-        // store.toggleCaptchaModal();
         
     }, 1500);
 
@@ -258,10 +271,32 @@ const launchLevel = (nLevel: number)=>{
     next()
 }
 
+const previous = () =>{
+    nextQuestion.value=nextQuestion.value-1;
+    if(currentQuestions[nextQuestion.value-1]){
+        openGame();
+    }
+    else{
+        if(nLevel.value>0){
+            levelTitle.value = "Level " + nLevel.value
+            store.toggleLevelEntranceModalVisible(true);
+            levelEntrance.value?.updateStars(store.scoreWorld1[nLevel.value-1],store.scoreWorld1[nLevel.value-2]);
+        }
+    }
+}
+
 const next = () =>{
     nextQuestion.value=nextQuestion.value+1;
     if(currentQuestions[nextQuestion.value-1]){
-        switch(currentQuestions[nextQuestion.value-1].type){
+        openGame();
+    }
+    else{
+        store.toggleResultModalVisible(true);
+    }
+}
+
+const openGame=()=>{
+    switch(currentQuestions[nextQuestion.value-1].type){
             case "draganddrop":
                 formDaD = currentQuestions[nextQuestion.value-1];
                 store.toggleDragAndDropModal(true);
@@ -278,16 +313,14 @@ const next = () =>{
                 formEstimation = currentQuestions[nextQuestion.value-1];
                 store.toggleEstimationModal(true);
                 break;
-
-                
+            case "jeu_captcha":
+                formCaptcha = currentQuestions[nextQuestion.value-1];
+                store.toggleCaptchaModal(true);
+                break;
             // case "height?":
                 // store.toggleHeightQuestionModal();
             //  break;
         }
-    }
-    else{
-        store.toggleResultModalVisible(true);
-    }
 }
     
 </script>

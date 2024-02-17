@@ -55,8 +55,8 @@ export const useAlertsStore = defineStore('alerts', {
       this.isEstimationModalVisible = openClose;
       sessionStorage.setItem('isEstimationModalVisible', this.isEstimationModalVisible ? 'true' : 'false');
     },
-    toggleCaptchaModal() {
-      this.isCaptchaModalVisible = !this.isCaptchaModalVisible;
+    toggleCaptchaModal(openClose:boolean) {
+      this.isCaptchaModalVisible = openClose;
       sessionStorage.setItem('isCaptchaModalVisible', this.isCaptchaModalVisible ? 'true' : 'false');
     },
     toggleLevelEntranceModalVisible(openClose:boolean) {
