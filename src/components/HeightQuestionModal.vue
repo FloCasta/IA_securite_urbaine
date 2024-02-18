@@ -4,20 +4,20 @@
         <div class="card_modal">
             <div class="head_modal">
                 <div class="title_modal">
-                    <h2>{{ props.title }}</h2>
+                    <h2>{{ props.form.title }}</h2>
                 </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png'
                     @click="store.toggleHeightQuestionModal" />
             </div>
             <div class='main_modal'>
                 <p>Question</p>
-                <div class="question_modal">{{ props.question }}</div>
+                <div class="question_modal">{{ props.form.question }}</div>
                 <p>Choix multiple</p>
                 <div class="answers_height_question">
-                    <div class="answer_height_question" v-for="answer in props.answers" @click="clickAnswer(answer.id)"
+                    <div class="answer_height_question" v-for="answer in props.form.answers" @click="clickAnswer(answer.id)"
                         v-bind:class="{ checked_height_question: selectedAnswer.includes(answer.id) }">
                         {{ answer.answer }}</div>
                 </div>
-                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ textAnswer }}</div>
+                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ props.form.textAnswer }}</div>
             </div>
             <div class='btn_submit_modal'>
                 <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
@@ -30,26 +30,26 @@
     
 <script setup lang="ts">
 import { useAlertsStore } from '@/store';
-import { ref } from 'vue';
+import { ref , watch } from 'vue';
 import { Point } from '@/class/Point';
-import type { HeightAnswer } from '@/class/HeightQuestion';
+import { HeightQuestion, type HeightAnswer } from '@/class/HeightQuestion';
 
 const store = useAlertsStore();
 
 const props = defineProps({
-    id: String,
+    form: { type: HeightQuestion, required: true },
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },
-    title: String,
-    question: String,
-    answers: Array<HeightAnswer>,
-    textAnswer: String,
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref<number[]>([]);
 const answerPage = false;
+
+watch(() => props.form, (form) => {
+    setTimeout(()=>{selectedAnswer.value = [];},50);
+  });
 
 const clickAnswer = (a: number) => {
     const index = selectedAnswer.value.indexOf(a);
@@ -71,14 +71,14 @@ const submit = () => {
     props.next();
 }
 
-const checkAnswer = () => {
-    let nGoodAnswers = 0
-    let goodAsnwsers = props.answers?.filter((a) => a.response == true);
-    goodAsnwsers?.forEach((a) => {
-        if (selectedAnswer.value.includes(a.id)) {
-            nGoodAnswers += 1;
-        }
-    })
+const checkAnswer = () =>{
+  let nGoodAnswers = 0
+  let goodAsnwsers = props.form.answers?.filter((a) => a.response == true);
+  goodAsnwsers?.forEach((a)=>{
+    if(selectedAnswer.value.includes(a.id)){
+      nGoodAnswers +=1;
+    }
+  })
 
     let point = 0;
     if (nGoodAnswers == goodAsnwsers!.length)

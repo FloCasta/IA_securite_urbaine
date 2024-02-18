@@ -4,25 +4,25 @@
         <div class="card_modal">
             <div class="head_modal">
                 <div class="title_modal">
-                    <h2>{{ props.title }}</h2>
+                    <h2>{{ props.form.title }}</h2>
                 </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png'
                     @click="store.toggleEstimationModal" />
             </div>
             <div class='main_modal'>
                 <p>Question</p>
-                <div class="question_modal">{{ props.question }}</div>
+                <div class="question_modal">{{ props.form.question }}</div>
                 <p>Estimation</p>
                 <div class="answers_estimation">
                     <div class="selectedAnswer_estimation" :style="{ left: sliderPosition + '%' }">{{ selectedAnswer }}
                     </div>
-                    <input type="range" :min=props.minNumber :max=props.maxNumber v-model=selectedAnswer
+                    <input type="range" :min="props.form.minNumber" :max="props.form.maxNumber" v-model=selectedAnswer
                         class="slider_estimation" id="myRange" @input="updateSliderPosition">
                     <div class="display_values_estimation">
-                        <div>{{ minNumber }}</div>
-                        <div>{{ maxNumber }}</div>
+                        <div>{{ props.form.minNumber }}</div>
+                        <div>{{ props.form.maxNumber }}</div>
                     </div>
                 </div>
-                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ textAnswer }}</div>
+                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ props.form.textAnswer }}</div>
             </div>
             <div class='btn_submit_modal'>
                 <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
@@ -34,30 +34,29 @@
 </template>
     
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref , watch , onMounted } from 'vue';
 import { Point } from '@/class/Point';
 import { useAlertsStore } from '@/store';
+import { Estimation } from '@/class/Estimation';
 
 const store = useAlertsStore();
 const props = defineProps({
-    id: String,
+    form: { type: Estimation, required: true },
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },
-    title: String,
-    question: String,
-    minNumber: Number,
-    maxNumber: Number,
-    increment: Number,
-    minAnswer: Number,
-    maxAnswer: Number,
-    textAnswer: String,
 });
-const selectedAnswer = ref(props.minNumber);
+const selectedAnswer = ref(props.form.minNumber);
 const data = ref({ questionId: null as String | null, selectedAnswer: Number });
-
 const answerPage = false;
 const sliderPosition = ref(0);
+
+watch(() => props.form, (newValue) => {
+  console.log('Value changed:', newValue.minNumber);
+  sliderPosition.value=0;
+  setTimeout(()=>{selectedAnswer.value =newValue.minNumber;},50)
+});
+
 
 const updateSliderPosition = (event: any) => {
     selectedAnswer.value = event.target.value;
@@ -80,7 +79,7 @@ const submit = () => {
 const checkAnswer = () =>{
   let answer = selectedAnswer.value!;
   let point = 0;
-  if(answer < props.maxAnswer! && answer > props.minAnswer!){
+  if(answer < props.form.maxAnswer! && answer > props.form.minAnswer!){
       point =1;
   }
   else 

@@ -40,6 +40,7 @@
     props.points?.forEach((p)=>{
       score+= p.point;
     })
+
     switch(props.nWorld){
       case 1:
         store.scoreWorld1[props.nLevel!-1] = score;
@@ -55,6 +56,7 @@
         break;
 
     }
+
   };    
 
   defineExpose({

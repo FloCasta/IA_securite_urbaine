@@ -19,33 +19,34 @@
             "textAnswer": "La bonne réponse est la discrimination."
           },
           "2":{
-            "id":1,
-            "title": "Question à choix multiples",
-            "type":"jeu_selection",
-            "question":"Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-            "answers":[
-              { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-              { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-              { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-              { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
-              { "id": 5, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-              { "id": 6, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-              { "id": 7, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-              { "id": 8, "answer": "Fournir des données pour des études sociologiques.", "response": false }
-            ],
-            "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
+            "id":14,
+            "title": "Captcha",
+            "type":"captcha",
+            "question": "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
+            "answers": [
+              { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png", "response": true },
+              { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png", "response": true },
+              { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png", "response": true },
+              { "id": 4, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png", "response": true },
+              { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png", "response": false },
+              { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png", "response": false }
+          ],
+            "textAnswer": "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
           },
           "3":{
-            "id": "3",
-            "title": "Estimation",
-            "type" : "bar_chiffree",
-            "question": "En pratique et en moyenne, combien de temps les collectivités gardent-elles les images ? (en jours)",
-            "minNumber": 2000,
-            "maxNumber": 2010,
-            "increment": 1,
-            "minAnswer": 2005,
-            "maxAnswer": 2007,
-            "textAnswer": "En effet, entre 21 et 30 jours est la bonne réponse"
+            "id":14,
+            "title": "Captcha",
+            "type":"captcha",
+            "question": "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
+            "answers": [
+              { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png", "response": true },
+              { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png", "response": true },
+              { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png", "response": true },
+              { "id": 4, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png", "response": true },
+              { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png", "response": false },
+              { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png", "response": false }
+          ],
+            "textAnswer": "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
           },
           "4":{
             "id":11,

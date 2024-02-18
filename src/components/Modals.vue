@@ -1,34 +1,20 @@
 <template>
-    <ResultModal ref="result_modal" :nWorld=nWorld :nLevel=nLevel :points=points v-show="store.isResultModalVisible">
-    </ResultModal>
-    <HolySentenceModal :previous=previous :next=next :addPoint=addPoint :id=formHs.id :title=formHs.title
-        :start_question=formHs.start_question :end_question=formHs.end_question :holy_word=formHs.holy_word
-        correctAnswer="[]" :textAnswer=formHs.textAnswer v-show="store.isHolySentenceModalVisible"></HolySentenceModal>
-    <QuestionModal :previous=previous :next=next :addPoint=addPoint :id=formQuestion.id :title=formQuestion.title
-        :question=formQuestion.question :answers=formQuestion.answers :textAnswer=formQuestion.textAnswer
-        v-show="store.isQuestionModalVisible"></QuestionModal>
-    <DragAndDropModal :previous=previous :next=next :addPoint=addPoint :id=formDaD.id :title=formDaD.title
-        :question=formDaD.question :answers=formDaD.answers correctAnswer="[]" :textAnswer=formDaD.textAnswer
-        v-show="store.isDragAndDropModalVisible"></DragAndDropModal>
-    <HeightQuestionModal :previous=previous :next=next :addPoint=addPoint :id=formHeightQuestion.id
-        :title=formHeightQuestion.title :question=formHeightQuestion.question :answers=formHeightQuestion.answers
-        :textAnswer=formHeightQuestion.textAnswer v-show="store.isHeightQuestionModalVisible">
-    </HeightQuestionModal>
-    <EstimationModal :previous=previous :next=next :addPoint=addPoint :id=formEstimation.id :title=formEstimation.title
-        :question=formEstimation.question :minNumber=formEstimation.minNumber :maxNumber=formEstimation.maxNumber
-        :minAnswer=formEstimation.minAnswer :maxAnswer=formEstimation.maxAnswer :increment=formEstimation.increment
-        :textAnswer=formEstimation.textAnswer v-show="store.isEstimationModalVisible">
-    </EstimationModal>
-    <CaptchaModal :previous=previous :next=next :addPoint=addPoint :id=formCaptcha.id :title=formCaptcha.title
-        :question=formCaptcha.question :answers=formCaptcha.answers :textAnswer=formCaptcha.textAnswer
-        v-show="store.isCaptchaModalVisible">
-    </CaptchaModal>
-    <HangedModal :previous=previous :next=next :addPoint=addPoint :id=formHanged.id :title=formHanged.title
-        :start_question=formHanged.start_question :end_question=formHanged.end_question :word=formHanged.word
-        :textAnswer=formHanged.textAnswer v-show="store.isHangedModalVisible">
+    <ResultModal ref="result_modal" :nWorld=nWorld :nLevel=nLevel :points=points v-show="store.isResultModalVisible" />
+    <HolySentenceModal :previous=previous :next=next :addPoint=addPoint :form="formHs"
+        v-show="store.isHolySentenceModalVisible" />
+    <QuestionModal :previous=previous :next=next :addPoint=addPoint :form="formQuestion"
+        v-show="store.isQuestionModalVisible" />
+    <DragAndDropModal :previous=previous :next=next :addPoint=addPoint :form="formDaD"
+        v-show="store.isDragAndDropModalVisible" />
+    <HeightQuestionModal :previous=previous :next=next :addPoint=addPoint :form="formHeightQuestion"
+        v-show="store.isHeightQuestionModalVisible" />
+    <EstimationModal :previous=previous :next=next :addPoint=addPoint :form="formEstimation"
+        v-show="store.isEstimationModalVisible" />
+    <CaptchaModal :previous=previous :next=next :addPoint=addPoint :form="formCaptcha"
+        v-show="store.isCaptchaModalVisible" />
+    <HangedModal :previous=previous :next=next :addPoint=addPoint :form="formHanged" v-show="store.isHangedModalVisible">
     </HangedModal>
-    <FlashcardModal :previous=previous :next=next :addPoint=addPoint :id=formFlashcard.id :title=formFlashcard.title
-        :question=formFlashcard.question :answers=formFlashcard.answers :textAnswer=formFlashcard.textAnswer
+    <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard"
         v-show="store.isFlashcardModalVisible"></FlashcardModal>
 </template>
   
@@ -66,127 +52,49 @@ const nWorld = ref(0);
 let nextQuestion = ref(1); // Current question number
 let points = ref<Point[]>([]);
 
-//test purpose
-const t = new DragAndDrop(
-    '1',
-    'Glisser déposer',
-    'Selon vous, quels sont les buts principaux de la vidéosurveillance ?',
-    [
-        { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-        { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-        { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-        { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
-    ],
-    'En effet, les bonnes réponses sont la A) et la B)'
-);
-//test purpose
-const q = new Question(
-    "2",
-    "Question à choix multiples",
-    "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-    [
-        { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-        { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-        { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-        { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
-    ],
-    "En effet, les bonnes réponses sont la A) et la B)"
-)
-//test purpose
-const h = new HolySentence(
-    "3",
-    "Phrase à trou",
-    "Selon vous, quels sont les buts principaux de la ",
-    " ?",
-    "vidéosurveillance",
-    "La bonne réponse est vidéosurveillance"
-);
-const hq = new HeightQuestion(
-    "4",
-    "Question à choix multiples",
-    "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-    [
-        { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-        { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-        { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-        { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
-        { "id": 5, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-        { "id": 6, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-        { "id": 7, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-        { "id": 8, "answer": "Fournir des données pour des études sociologiques.", "response": false },
-    ],
-    "En effet, les bonnes réponses sont la A) et la B)"
-);
-const e = new Estimation(
-    "5",
-    "Estimation",
-    "En pratique et en moyenne, combien de temps les collectivités gardent-elles les images ? (en jours)",
-    2000,
-    2010,
-    1,
-    2005,
-    2007,
-    "En effet, entre 21 et 30 jours est la bonne réponse"
-);
+let currentQuestions = [];
+let listQuestions = [];
+//Ils ont besoin d'être init ils peuvent pas être vide
+let formCaptcha: Ref<Captcha> = ref(data.worlds.world1.questions[6]);
+let formDaD: Ref<DragAndDrop> = ref(data.worlds.world1.questions[4]);
+let formEstimation: Ref<Estimation> = ref(data.worlds.world1.questions[3]);
+let formHeightQuestion: Ref<HeightQuestion> = ref(data.worlds.world1.questions[2]);
+let formHs: Ref<HolySentence> = ref(data.worlds.world1.questions[13]);
+let formQuestion: Ref<Question> = ref(data.worlds.world1.questions[8]);
+let formHanged: Ref<Hanged> = ref(data.worlds.world1.questions[1]);
+let formFlashcard: Ref<Flashcard> = ref(data.worlds.world1.questions[1]);
 
-const c = new Captcha(
-    "4",
-    "Captcha",
-    "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
-    [
-        { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png", "response": true },
-        { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png", "response": true },
-        { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png", "response": true },
-        { "id": 4, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png", "response": true },
-        { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png", "response": false },
-        { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png", "response": false }
-    ],
-    "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
-);
-
-const f = new Flashcard(
-    "8",
-    "Mémorie",
-    "Trouver les images paires",
-    [
-        { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png" },
-        { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png" },
-        { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png" },
-        { "id": 4, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png" },
-        { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png" },
-        { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png" },
-        { "id": 7, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png" },
-        { "id": 8, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png" },
-        { "id": 9, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png" },
-        { "id": 10, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png" },
-        { "id": 11, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png" },
-        { "id": 12, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png" }
-    ],
-    "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
-);
-
-//test purpose
-let formEstimation: Ref<Estimation> = ref(e);
-
-let formCaptcha: Ref<Captcha> = ref(c);
-
-//test purpose
-const listQuestions = [f, hq, t, h, q,
-    c, e, t, q, t,
-    h, c, q, e, q];
-
-
-let currentQuestions = [t, t, t, t, t];
-
-let formHeightQuestion: Ref<HeightQuestion> = ref(hq);
-
-let formDaD: Ref<DragAndDrop> = ref(t);
-
-let formQuestion: Ref<Question> = ref(q);
-
-let formHs: Ref<HolySentence> = ref(h);
-
-let formFlashcard: Ref<Flashcard> = ref(f);
+const initQuestionsForWorld = () => {
+    for (let i = 1; i <= 15; i++) {
+        let question = data.worlds["world" + nWorld.value].questions[i];
+        switch (question.type) {
+            case QuestionEnum.Captcha:
+                listQuestions[i - 1] = Captcha.fromJSON(question);
+                break;
+            case QuestionEnum.DragAndDrop:
+                listQuestions[i - 1] = DragAndDrop.fromJSON(question);
+                break;
+            case QuestionEnum.Estimation:
+                listQuestions[i - 1] = Estimation.fromJSON(question);
+                break;
+            case QuestionEnum.Height:
+                listQuestions[i - 1] = HeightQuestion.fromJSON(question);
+                break;
+            case QuestionEnum.HolySentence:
+                listQuestions[i - 1] = HolySentence.fromJSON(question);
+                break;
+            case QuestionEnum.Question:
+                listQuestions[i - 1] = Question.fromJSON(question);
+                break;
+            case QuestionEnum.Hanged:
+                listQuestions[i - 1] = Hanged.fromJSON(question);
+                break;
+            case QuestionEnum.Flashcard:
+                listQuestions[i - 1] = Flashcard.fromJSON(question);
+                break;
+        }
+    }
+}
 
 const addPoint = (point: Point) => {
     points.value[nextQuestion.value] = point;
@@ -257,6 +165,7 @@ const openGame = () => {
             store.toggleFlashcardModal();
             break;
     }
+
 }
 
 defineExpose({

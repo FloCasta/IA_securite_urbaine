@@ -4,12 +4,12 @@
     <div class="card_modal">
       <div class="head_modal">
         <div class="title_modal">
-          <h2>{{ props.title }}</h2>
+          <h2>{{ props.form.title }}</h2>
         </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleDragAndDropModal" />
       </div>
       <div class='main_modal'>
         <p>Question</p>
-        <div class="question_modal">{{ props.question }}</div>
+        <div class="question_modal">{{ props.form.question }}</div>
         <p>Classement</p>
         <div class="draggable">
           <draggable v-model="answers" group="answer" class="answers_drag_and_drop" item-key="id" :move="onMove">
@@ -24,7 +24,7 @@
             </template>
           </draggable>
         </div>
-        <div class="text_answer_modal" v-show="answerPage">Réponse : {{ textAnswer }}</div>
+        <div class="text_answer_modal" v-show="answerPage">Réponse : {{ props.form.textAnswer }}</div>
       </div>
       <div class='btn_submit_modal'>
         <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
@@ -37,28 +37,28 @@
   
 <script setup lang="ts">
 import { useAlertsStore } from '@/store';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Point } from '@/class/Point';
 import draggable from 'vuedraggable';
-import {type DragAndDropAnswer} from '@/class/DragAndDrop';
+import {DragAndDrop, type DragAndDropAnswer} from '@/class/DragAndDrop';
 
 const store = useAlertsStore();
 
 const props = defineProps({
-  id: String,
+  form: { type: DragAndDrop, required: true },
   next: { type: Function, required: true },
   previous: { type: Function, required: true },
   addPoint: { type: Function, required: true },
-  title: String,
-  question: String,
-  answers: { type: Array<DragAndDropAnswer>, required: true },
-  textAnswer: String,
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref<number[]>([]);
 const answerPage = false;
-const answers = ref(props.answers);
+const answers = ref(props.form.answers);
+
+watch(() => props.form, (form) => {
+    setTimeout(()=>{selectedAnswer.value = [];answers.value=form.answers},50);
+  });
 
 function onMove() {
   if (selectedAnswer.value.length == 4) return false
@@ -77,7 +77,7 @@ const submit = () => {
 
 const checkAnswer = () =>{
   let nGoodAnswers = 0
-  let goodAsnwsers = props.answers?.filter((a) => a.response == true);
+  let goodAsnwsers = props.form.answers?.filter((a) => a.response == true);
   let answers = selectedAnswer.value.map(obj => obj.id);
   goodAsnwsers?.forEach((a)=>{
     if(answers.includes(a.id) ){

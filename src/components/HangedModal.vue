@@ -4,16 +4,16 @@
         <div class="card_modal">
             <div class="head_modal">
                 <div class="title_modal">
-                    <h2>{{ props.title }}</h2>
+                    <h2>{{ props.form.title }}</h2>
                 </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleHangedModal" />
             </div>
             <div class='main_modal'>
                 <p>Question</p>
                 <div class="container_hanged">
                     <div class="question_hanged">
-                        {{ props.start_question }}
+                        {{ props.form.start_question }}
                         <span class="word_hanged"> ? </span>
-                        {{ props.end_question }}
+                        {{ props.form.end_question }}
                         <div class="field_container">
                             <input type="text" v-for="l in emptyWord" :value="l" readonly class="field_input"
                                 :class="{ space_hanged: l == '&', word_hanged: l != '' }">
@@ -28,7 +28,7 @@
                         :class="{ letter_checked_hanged: !a.clickable || nbBadAnswer >= maxAnswer }" :disabled="!a.clickable
                             || nbBadAnswer >= maxAnswer">{{ a.letter }}</button>
                 </div>
-                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ textAnswer }}</div>
+                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ props.form.textAnswer }}</div>
             </div>
             <div class='btn_submit_modal'>
                 <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
@@ -43,26 +43,21 @@
 import { ref } from 'vue';
 import { useAlertsStore } from '@/store';
 import { Point } from '@/class/Point';
-import type { HangedAnswer } from '@/class/Hanged';
+import { Hanged, type HangedAnswer } from '@/class/Hanged';
 
 const store = useAlertsStore();
 
 const props = defineProps({
-    id: { type: String, required: true },
+    form: { type: Hanged, required: true },
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },
-    title: String,
-    start_question: String,
-    end_question: String,
-    word: String,
-    answers: Array<HangedAnswer>,
-    textAnswer: String,
+
 });
 
 const alphabet = ref("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => ({ letter, clickable: true })));
 
-const emptyWord = ref(props.word.split('').map(char => char === ' ' ? '&' : ' '));
+const emptyWord = ref(props.form.word.split('').map(char => char === ' ' ? '&' : ' '));
 
 const data = ref({ questionId: null as String | null, selectedAnswer: [] as number[] });
 let selectedAnswer = ref<string>("");
@@ -76,9 +71,9 @@ const clickLetter = (index: number) => {
     alphabet.value[index].clickable = false;
 
     let findGoodLetter = false;
-    if (props.word) {
-        for (let i = 0; i < props.word.length; i++) {
-            if (props.word[i] === alphabet.value[index].letter) {
+    if (props.form.word) {
+        for (let i = 0; i < props.form.word.length; i++) {
+            if (props.form.word[i] === alphabet.value[index].letter) {
                 emptyWord.value[i] = alphabet.value[index].letter;
                 findGoodLetter = true;
             }
@@ -87,7 +82,6 @@ const clickLetter = (index: number) => {
 
     if (!findGoodLetter) {
         nbBadAnswer.value++;
-        console.log(nbBadAnswer.value);
 
         if (nbBadAnswer.value <= maxAnswer.value) {
             drawHangman();
@@ -190,8 +184,14 @@ const submit = () => {
 
 const checkAnswer = () => {
     selectedAnswer = ref(emptyWord.value.join(''));
-    //TODO
-    props.addPoint(1,"");
+    let isComplete = emptyWord.value.filter((w)=> w == ' ');
+    let point=0;
+    if(nbBadAnswer.value==maxAnswer.value){
+        point = 0;
+    }else if(isComplete.length == 0){
+        point =1;
+    }
+    props.addPoint(new Point(point,""));
 }
 
 </script>
