@@ -1,25 +1,22 @@
 <template>
-    <ResultModal v-show="store.isResultModalVisible"></ResultModal>
-    <HolySentenceModal :previous=previous :next=next :id=formHs.id :title=formHs.title :start_question=formHs.start_question
-        :end_question=formHs.end_question :holy_word=formHs.holy_word correctAnswer="[]" :textAnswer=formHs.textAnswer
-        v-show="store.isHolySentenceModalVisible"></HolySentenceModal>
-    <QuestionModal :previous=previous :next=next :id=formQuestion.id :title=formQuestion.title
-        :question=formQuestion.question :answers=formQuestion.answers :textAnswer=formQuestion.textAnswer
-        v-show="store.isQuestionModalVisible"></QuestionModal>
-    <DragAndDropModal :previous=previous :next=next :id=formDaD.id :title=formDaD.title :question=formDaD.question
-        :answers=formDaD.answers correctAnswer="[]" :textAnswer=formDaD.textAnswer v-show="store.isDragAndDropModalVisible">
-    </DragAndDropModal>
-    <HeightQuestionModal :id=form4.id :title=form4.title :question=form4.question :answers=form4.answers
-        :textAnswer=form4.textAnswer v-show="store.isHeightQuestionModalVisible">
-    </HeightQuestionModal>
-    <EstimationModal :previous=previous :next=next :id=formEstimation.id :title=formEstimation.title
-        :question=formEstimation.question :minNumber=formEstimation.minNumber :maxNumber=formEstimation.maxNumber
-        :minAnswer=formEstimation.minAnswer :maxAnswer=formEstimation.maxAnswer :increment=formEstimation.increment
-        :textAnswer=formEstimation.textAnswer v-show="store.isEstimationModalVisible">
-    </EstimationModal>
-    <CaptchaModal :previous=previous :next=next :id=formCaptcha.id :title=formCaptcha.title :question=formCaptcha.question
-        :answers=formCaptcha.answers :textAnswer=formCaptcha.textAnswer v-show="store.isCaptchaModalVisible">
-    </CaptchaModal>
+        <ResultModal ref="result_modal" :nLevel=props.nLevel :points=points v-show="store.isResultModalVisible"></ResultModal>
+        <HolySentenceModal :previous=previous :next=next :addPoint=addPoint :id=formHs.id :title=formHs.title :start_question=formHs.start_question
+            :end_question=formHs.end_question :holy_word=formHs.holy_word correctAnswer="[]" :textAnswer=formHs.textAnswer
+            v-show="store.isHolySentenceModalVisible" ></HolySentenceModal>
+        <QuestionModal :previous=previous :next=next :addPoint=addPoint :id=formQuestion.id :title=formQuestion.title :question=formQuestion.question :answers=formQuestion.answers
+            :textAnswer=formQuestion.textAnswer v-show="store.isQuestionModalVisible"></QuestionModal>
+        <DragAndDropModal :previous=previous :next=next :addPoint=addPoint  :id=formDaD.id :title=formDaD.title :question=formDaD.question :answers=formDaD.answers correctAnswer="[]"
+            :textAnswer=formDaD.textAnswer v-show="store.isDragAndDropModalVisible"></DragAndDropModal>
+            <HeightQuestionModal :previous=previous :next=next :addPoint=addPoint :id=formHeightQuestion.id :title=formHeightQuestion.title :question=formHeightQuestion.question :answers=formHeightQuestion.answers
+            :textAnswer=formHeightQuestion.textAnswer v-show="store.isHeightQuestionModalVisible">
+        </HeightQuestionModal>
+        <EstimationModal :previous=previous :next=next :addPoint=addPoint :id=formEstimation.id :title=formEstimation.title :question=formEstimation.question :minNumber=formEstimation.minNumber
+            :maxNumber=formEstimation.maxNumber :minAnswer=formEstimation.minAnswer :maxAnswer=formEstimation.maxAnswer :increment=formEstimation.increment
+            :textAnswer=formEstimation.textAnswer v-show="store.isEstimationModalVisible">
+        </EstimationModal>
+        <CaptchaModal :previous=previous :next=next :addPoint=addPoint :id=formCaptcha.id :title=formCaptcha.title :question=formCaptcha.question :answers=formCaptcha.answers
+            :textAnswer=formCaptcha.textAnswer v-show="store.isCaptchaModalVisible">
+        </CaptchaModal>
 </template>
   
 <script setup lang="ts">
@@ -32,60 +29,68 @@ import EstimationModal from '@/components/EstimationModal.vue';
 import CaptchaModal from '@/components/CaptchaModal.vue';
 import { ref, type Ref } from 'vue';
 import ResultModal from '@/components/ResultModal.vue';
+import { Point } from '@/class/Point';
+import { Estimation } from '@/class/Estimation';
+import { Captcha } from '@/class/Captcha';
+import { QuestionEnum } from '@/class/QuestionEnum';
+import { HeightQuestion } from '@/class/HeightQuestion';
+import { DragAndDrop } from '@/class/DragAndDrop';
+import { Question } from '@/class/Question';
+import { HolySentence } from '@/class/HolySentence';
 
 const store = useAlertsStore();
 
-// store.toggleHolySentenceModal();
-// store.toggleQuestionModal();
-// store.toggleDragAndDropModal();
-// store.toggleHeightQuestionModal();
-// store.toggleEstimationModal();
-// store.toggleCaptchaModal();
+const props = defineProps({
+    nLevel: Number,
+});
 
-const form1 = {
-    "id": "1",
-    "title": "Glisser déposer",
-    "type": "draganddrop",
-    "question": "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-    "answers": [
+const result_modal = ref<any>(null);
+
+
+
+let nextQuestion = ref(1); // Current question number
+let points = ref<Point[]>([]);
+
+//test purpose
+const t =new DragAndDrop(
+    '1',
+    'Glisser déposer',
+    'Selon vous, quels sont les buts principaux de la vidéosurveillance ?',
+    [
         { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
         { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
         { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
         { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
     ],
-    "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
-};
-
-const form2 = {
-    "id": "2",
-    "title": "Question à choix multiples",
-    "type": "question",
-    "question": "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-    "answers": [
+    'En effet, les bonnes réponses sont la A) et la B)'
+);
+//test purpose
+const q =  new Question(
+    "2",
+    "Question à choix multiples",
+    "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
+    [
         { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
         { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
         { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
         { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
     ],
-    "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
-};
-
-const form3 = {
-    "id": "3",
-    "title": "Phrase à trou",
-    "type": "holysentence",
-    "start_question": "Selon vous, quels sont les buts principaux de la ",
-    "end_question": " ?",
-    "holy_word": "vidéosurveillance",
-    "textAnswer": "La bonne réponse est vidéosurveillance"
-};
-
-const form4 = {
-    "id": "4",
-    "title": "Question à choix multiples",
-    "type": "jeu_selection",
-    "question": "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-    "answers": [
+    "En effet, les bonnes réponses sont la A) et la B)"
+)
+//test purpose
+const h= new HolySentence(
+    "3",
+    "Phrase à trou",
+    "Selon vous, quels sont les buts principaux de la ",
+    " ?",
+    "vidéosurveillance",
+    "La bonne réponse est vidéosurveillance"
+);
+const hq = new HeightQuestion(
+    "4",
+    "Question à choix multiples",
+    "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
+    [
         { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
         { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
         { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
@@ -95,27 +100,25 @@ const form4 = {
         { "id": 7, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
         { "id": 8, "answer": "Fournir des données pour des études sociologiques.", "response": false },
     ],
-    "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
-};
+    "En effet, les bonnes réponses sont la A) et la B)"
+);
+const e= new Estimation(
+    "5",
+    "Estimation",
+    "En pratique et en moyenne, combien de temps les collectivités gardent-elles les images ? (en jours)",
+    2000,
+    2010,
+    1,
+    2005,
+    2007,
+    "En effet, entre 21 et 30 jours est la bonne réponse"
+);
 
-const form5 = {
-    "id": "5",
-    "title": "Estimation",
-    "type": "bar_chiffree",
-    "question": "En pratique et en moyenne, combien de temps les collectivités gardent-elles les images ? (en jours)",
-    "minNumber": 2000,
-    "maxNumber": 2010,
-    "increment": 1,
-    "minAnswer": 21,
-    "maxAnswer": 30,
-    "textAnswer": "En effet, entre 21 et 30 jours est la bonne réponse"
-};
-const form6 = {
-    "id": "4",
-    "title": "Captcha",
-    "type": "jeu_captcha",
-    "question": "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
-    "answers": [
+const c= new Captcha(
+    "4",
+    "Captcha",
+    "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
+    [
         { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png", "response": true },
         { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png", "response": true },
         { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png", "response": true },
@@ -123,156 +126,36 @@ const form6 = {
         { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png", "response": false },
         { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png", "response": false }
     ],
-    "textAnswer": "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
-};
-
-let nextQuestion = ref(1); // Current question number
+    "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
+);
 
 //test purpose
-const t = {
-    "id": "1",
-    "title": "Glisser déposer",
-    "type": "draganddrop",
-    "question": "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-    "answers": [
-        { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-        { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-        { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-        { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
-    ],
-    "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
-};
-//test purpose
-const q = {
-    "id": "2",
-    "title": "Question à choix multiples",
-    "type": "question",
-    "question": "Selon vous, quels sont les buts principaux de la vidéosurveillance ?",
-    "answers": [
-        { "id": 1, "answer": "Dissuader les comportements criminels par une présence visible.", "response": true },
-        { "id": 2, "answer": "Identifier a posteriori les auteurs/autrices d’infractions pour réprimander plus facilement.", "response": true },
-        { "id": 3, "answer": "Analyser les tendances de circulation pour l'urbanisme.", "response": false },
-        { "id": 4, "answer": "Fournir des données pour des études sociologiques.", "response": false },
-    ],
-    "textAnswer": "En effet, les bonnes réponses sont la A) et la B)"
-}
-//test purpose
-const h = {
-    "id": "3",
-    "title": "Phrase à trou",
-    "type": "holysentence",
-    "start_question": "Selon vous, quels sont les buts principaux de la ",
-    "end_question": " ?",
-    "holy_word": "vidéosurveillance",
-    "textAnswer": "La bonne réponse est vidéosurveillance"
-};
+let formEstimation : Ref<Estimation>=ref(e);
 
-const e = {
-    "id": "5",
-    "title": "Estimation",
-    "type": "bar_chiffree",
-    "question": "En pratique et en moyenne, combien de temps les collectivités gardent-elles les images ? (en jours)",
-    "minNumber": 2000,
-    "maxNumber": 2010,
-    "increment": 1,
-    "minAnswer": 21,
-    "maxAnswer": 30,
-    "textAnswer": "En effet, entre 21 et 30 jours est la bonne réponse"
-};
-
-const c = {
-    "id": "4",
-    "title": "Captcha",
-    "type": "jeu_captcha",
-    "question": "Qu’est-ce qui peut bloquer la reconnaissance faciale ?",
-    "answers": [
-        { "id": 1, "answer": "Le maquillage", "img": "/captcha/captcha1_answer1.png", "response": true },
-        { "id": 2, "answer": "Le masque", "img": "/captcha/captcha1_answer2.png", "response": true },
-        { "id": 3, "answer": "Les perruques", "img": "/captcha/captcha1_answer3.png", "response": true },
-        { "id": 4, "answer": "Les fausses barbes", "img": "/captcha/captcha1_answer4.png", "response": true },
-        { "id": 5, "answer": "Un t-shirt vert", "img": "/captcha/captcha1_answer5.png", "response": false },
-        { "id": 6, "answer": "Une cravate", "img": "/captcha/captcha1_answer6.png", "response": false }
-    ],
-    "textAnswer": "En effet, le style vestimentaire n'impacte pas la reconnaissance faciale."
-}
+let formCaptcha: Ref<Captcha>=ref(c);
 
 //test purpose
-let formEstimation: Ref<{
-    id: string;
-    title: string;
-    type: string;
-    question: string;
-    minNumber: number;
-    maxNumber: number;
-    increment: number;
-    minAnswer: number;
-    maxAnswer: number;
-    textAnswer: string;
-}> = ref(e);
-
-let formCaptcha: Ref<{
-    id: string;
-    title: string;
-    type: string;
-    question: string;
-    answers: {
-        id: number;
-        answer: string;
-        img: string;
-        response: boolean;
-    }[];
-    textAnswer: string;
-}> = ref(c);
-
-//test purpose
-const listQuestions = [e, h, t, c, q,
-    c, e, t, q, t,
-    h, c, q, e, q];
+const listQuestions = [q,hq,t,h,q,
+                        c,e,t,q,t,
+                        h,c,q,e,q];
 
 
 let currentQuestions = [t, t, t, t, t];
 
-let formDaD: Ref<{
-    id: string;
-    title: string;
-    type: string;
-    question: string;
-    answers: {
-        id: number;
-        answer: string;
-        response: boolean;
-    }[];
-    textAnswer: string;
-}> = ref(t);
+let formHeightQuestion : Ref<HeightQuestion>= ref(hq);
 
-let formQuestion: Ref<{
-    id: string;
-    title: string;
-    type: string;
-    question: string;
-    answers: {
-        id: number;
-        answer: string;
-        response: boolean;
-    }[];
-    textAnswer: string;
-}> = ref(q);
+let formDaD: Ref<DragAndDrop>=ref(t);
 
-let formHs: Ref<{
-    id: string;
-    title: string;
-    type: string;
-    start_question: string,
-    end_question: string,
-    holy_word: string,
-    textAnswer: string;
-}> = ref(h);
+let formQuestion: Ref<Question> = ref(q);
 
+let formHs: Ref<HolySentence> = ref(h);
 
+const addPoint = (point : Point) => {
+    points.value[nextQuestion.value] = point;
+}
 
-const launchLevel = (nLevel: number, scorePrevious: number) => {
-    console.log(scorePrevious)
-    if (scorePrevious > 2 || nLevel == 1) {
+const launchLevel = (nLevel: number,scorePrevious:number)=>{
+    if(scorePrevious>=3 || nLevel==1){
 
 
         currentQuestions = []
@@ -280,6 +163,7 @@ const launchLevel = (nLevel: number, scorePrevious: number) => {
             currentQuestions[i] = listQuestions[i + (5 * (nLevel - 1))]
         }
         nextQuestion.value = 0;
+        points.value=[]
         store.toggleModals();
         next()
     }
@@ -299,35 +183,37 @@ const next = () => {
     }
     else {
         store.toggleResultModalVisible();
+        result_modal.value?.updatePoints()
     }
 }
 
-const openGame = () => {
-    switch (currentQuestions[nextQuestion.value - 1].type) {
-        case "draganddrop":
-            formDaD = currentQuestions[nextQuestion.value - 1];
-            store.toggleDragAndDropModal();
-            break;
-        case "question":
-            formQuestion = currentQuestions[nextQuestion.value - 1];
-            store.toggleQuestionModal();
-            break;
-        case "holysentence":
-            formHs = currentQuestions[nextQuestion.value - 1];
-            store.toggleHolySentenceModal();
-            break;
-        case "bar_chiffree":
-            formEstimation = currentQuestions[nextQuestion.value - 1];
-            store.toggleEstimationModal();
-            break;
-        case "jeu_captcha":
-            formCaptcha = currentQuestions[nextQuestion.value - 1];
-            store.toggleCaptchaModal();
-            break;
-        // case "height?":
-        // store.toggleHeightQuestionModal();
-        //  break;
-    }
+const openGame=()=>{
+    switch(currentQuestions[nextQuestion.value-1].type){
+            case QuestionEnum.DragAndDrop:
+                formDaD.value = currentQuestions[nextQuestion.value-1] as DragAndDrop;
+                store.toggleDragAndDropModal();
+                break;
+            case QuestionEnum.Question:
+                formQuestion.value = currentQuestions[nextQuestion.value-1] as Question;
+                store.toggleQuestionModal();
+                break;
+            case QuestionEnum.HolySentence:
+                formHs.value = currentQuestions[nextQuestion.value - 1] as HolySentence;
+                store.toggleHolySentenceModal();
+                break;
+            case QuestionEnum.Estimation:
+                formEstimation.value = currentQuestions[nextQuestion.value - 1] as Estimation;
+                store.toggleEstimationModal();
+                break;
+            case QuestionEnum.Captcha:
+                formCaptcha.value = currentQuestions[nextQuestion.value-1] as Captcha;
+                store.toggleCaptchaModal();
+                break;
+            case QuestionEnum.Height:
+                formHeightQuestion.value = currentQuestions[nextQuestion.value-1] as HeightQuestion;
+                store.toggleHeightQuestionModal();
+                break;
+        }
 }
 
 defineExpose({

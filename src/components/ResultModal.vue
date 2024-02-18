@@ -9,26 +9,42 @@
           <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleResultModalVisible" />
         </div>
         <button class="btn_start" @click="submit">mettre 4/5 premier niveau</button>
-        <p>You did it</p>
+        <p>You did it {{ score }} /5</p>
       </div>
     </Transition>
   </template>
     
   <script setup lang="ts">
-  import { ref } from 'vue';
+  import { Point } from '@/class/Point';
   import { useAlertsStore } from '@/store';
   
+  const props = defineProps({
+    title: String,
+    points: Array as () => Point[],
+    nLevel: Number,
+  });
+
   const store = useAlertsStore();
+
+  let score = 0;
+
   
   const submit = () => {
     let t =[4,0,0]
     store.setScoreWorld1(t)
   }
-  
-  const props = defineProps({
-    title: String
+
+  const updatePoints = () => {
+    score = 0;
+    props.points?.forEach((p)=>{
+      score+= p.point;
+    })
+    store.scoreWorld1[props.nLevel!-1] = score;
+  };    
+
+  defineExpose({
+    updatePoints
   });
-  
 
   </script>
     

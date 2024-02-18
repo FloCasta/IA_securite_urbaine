@@ -29,6 +29,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAlertsStore } from '@/store';
+import { Point } from '@/class/Point';
+import diacritics from 'diacritics';
 
 const store = useAlertsStore();
 
@@ -36,6 +38,7 @@ const props = defineProps({
   id: { type: String, required: true },
   next: { type: Function, required: true },
   previous: { type: Function, required: true },
+  addPoint: { type: Function, required: true },
   title: String,
   start_question: String,
   end_question: String,
@@ -54,7 +57,20 @@ const previous = () => {
 
 const submit = () => {
   store.toggleHolySentenceModal();
+  checkAnswer();
   props.next();
+}
+
+const checkAnswer = () =>{
+  let point = 0;
+  //Clean the word to remoe space, accents, majuscule...
+  let answer = diacritics.remove(selectedAnswer.value.toLowerCase().replace(/[\u0300-\u036f]/g, "").replace(/[\s-]/g, "")).replace(/[\s-]/g, '');
+  let holy_word = diacritics.remove(props.holy_word?.toLowerCase()).replace(/[\s-]/g, '') || "";
+  if(answer === holy_word )
+    point=1;
+  else point = 0;
+
+  props.addPoint(new Point(point,"type"));
 }
 
 </script>

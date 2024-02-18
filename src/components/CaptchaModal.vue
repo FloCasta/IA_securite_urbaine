@@ -30,23 +30,19 @@
 <script setup lang="ts">
 import { useAlertsStore } from '@/store';
 import { ref } from 'vue';
+import { Point } from '@/class/Point';
+import type { CaptchaAnswer } from '@/class/Captcha';
 
 const store = useAlertsStore();
-
-interface Answer {
-    id: number;
-    answer: string;
-    img: string;
-    response: boolean;
-}
 
 const props = defineProps({
     id: { type: String, required: true },
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
+    addPoint: { type: Function, required: true },
     title: String,
     question: String,
-    answers: Array<Answer>,
+    answers: Array<CaptchaAnswer>,
     textAnswer: String,
 });
 
@@ -70,7 +66,27 @@ const previous = () => {
 
 const submit = () => {
     store.toggleCaptchaModal();
+    checkAnswer();
     props.next();
+}
+
+const checkAnswer = () =>{
+  let nGoodAnswers = 0
+  let goodAsnwsers = props.answers?.filter((a) => a.response == true);
+  goodAsnwsers?.forEach((a)=>{
+    if(selectedAnswer.value.includes(a.id)){
+      nGoodAnswers +=1;
+    }
+  })
+  
+  let point = 0;
+  if(nGoodAnswers == goodAsnwsers!.length)
+    point = 1;
+  else if (nGoodAnswers == 0)
+    point = 0;
+  else 
+    point = 0.5
+  props.addPoint(new Point(point,"type"));
 }
 
 </script>

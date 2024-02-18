@@ -35,6 +35,7 @@
     
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Point } from '@/class/Point';
 import { useAlertsStore } from '@/store';
 
 const store = useAlertsStore();
@@ -42,6 +43,7 @@ const props = defineProps({
     id: { type: String, required: true },
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
+    addPoint: { type: Function, required: true },
     title: String,
     question: String,
     minNumber: Number,
@@ -71,7 +73,19 @@ const previous = () => {
 
 const submit = () => {
     store.toggleEstimationModal();
+    checkAnswer();
     props.next();
+}
+
+const checkAnswer = () =>{
+  let answer = selectedAnswer.value!;
+  let point = 0;
+  if(answer < props.maxAnswer! && answer > props.minAnswer!){
+      point =1;
+  }
+  else 
+    point = 0
+  props.addPoint(new Point(point,"type"));
 }
 
 </script>
