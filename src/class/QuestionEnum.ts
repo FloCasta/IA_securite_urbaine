@@ -6,4 +6,5 @@ export enum QuestionEnum {
   Height = 'jeu_selection',
   Hanged = 'jeu_pendu',
   Captcha = 'captcha',
+  Flashcard = 'flashcard',
 }
