@@ -15,6 +15,11 @@ export class DragAndDrop {
       this.answers = answers;
       this.textAnswer = textAnswer;
     }
+    static fromJSON(jsonData: any): DragAndDrop {
+      const { id, title, question, answers, textAnswer } = jsonData;
+      return new DragAndDrop(id, title, question, answers, textAnswer);
+    }
+
   }
 export interface DragAndDropAnswer {
     id: number;

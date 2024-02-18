@@ -61,8 +61,6 @@ function movePlayer(castleName: string) {
         let element = castleName.replace(/[^\d]/g, '');
         nLevel.value = parseInt(element[1]); 
         if (nLevel.value > 0) {
-            console.log(nLevel.value)
-            console.log(store.scoreWorld4)
             modal.value?.launchLevel(nLevel.value, store.scoreWorld4[nLevel.value - 2],4);
         }
 

@@ -40,8 +40,6 @@
     props.points?.forEach((p)=>{
       score+= p.point;
     })
-    console.log(props.nLevel!-1)
-    console.log(props.nWorld)
     switch(props.nWorld){
       case 1:
         store.scoreWorld1[props.nLevel!-1] = score;
@@ -54,8 +52,6 @@
         break;
       case 4:
         store.scoreWorld4[props.nLevel!-1] = score;
-        console.log(props.nLevel)
-        console.log(score)
         break;
 
     }

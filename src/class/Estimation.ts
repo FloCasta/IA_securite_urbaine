@@ -25,4 +25,8 @@ export class Estimation{
             this.maxAnswer = maxAnswer;
             this.textAnswer = textAnswer;
     }
+    static fromJSON(jsonData: any): Estimation {
+        const { id, title, question, minNumber, maxNumber, increment, minAnswer, maxAnswer, textAnswer } = jsonData;
+        return new Estimation(id, title, question, minNumber, maxNumber, increment, minAnswer, maxAnswer, textAnswer);
+      }
 }
