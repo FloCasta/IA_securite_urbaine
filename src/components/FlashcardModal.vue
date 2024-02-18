@@ -4,19 +4,19 @@
         <div class="card_modal">
             <div class="head_modal">
                 <div class="title_modal">
-                    <h2>{{ props.title }}</h2>
-                </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleCaptchaModal" />
+                    <h2>{{ props.form.title }}</h2>
+                </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleFlashcardModal" />
             </div>
             <div class='main_modal'>
                 <p>Question</p>
-                <div class="question_modal">{{ props.question }}</div>
+                <div class="question_modal">{{ props.form.question }}</div>
                 <p>Selection</p>
                 <div class="answers_flashcard">
-                    <img class="img_flashcard" :src=answer.img :alt=answer.answer v-for="answer in props.answers"
+                    <img class="img_flashcard" :src=answer.img :alt=answer.answer v-for="answer in props.form.answers"
                         @click="clickAnswer(answer.id)"
                         v-bind:class="{ checked_flashcard: selectedAnswer.includes(answer.id) }">
                 </div>
-                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ textAnswer }}</div>
+                <div class="text_answer_modal" v-show="answerPage">Réponse : {{ props.form.textAnswer }}</div>
             </div>
             <div class='btn_submit_modal'>
                 <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
@@ -29,26 +29,28 @@
     
 <script setup lang="ts">
 import { useAlertsStore } from '@/store';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Point } from '@/class/Point';
-import type { FlashcardAnswer } from '@/class/Captcha';
+import { Flashcard, type FlashcardAnswer } from '@/class/Flashcard';
+
 
 const store = useAlertsStore();
 
 const props = defineProps({
-    id: String,
+    form: { type: Flashcard, required: true },
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },
-    title: String,
-    question: String,
-    answers: Array<FlashCardAnswer>,
-    textAnswer: String,
+
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref<number[]>([]);
 const answerPage = false;
+
+watch(() => props.form, (form) => {
+    setTimeout(() => { selectedAnswer.value = []; }, 50);
+});
 
 const clickAnswer = (a: number) => {
     const index = selectedAnswer.value.indexOf(a);
@@ -60,19 +62,19 @@ const clickAnswer = (a: number) => {
 }
 
 const previous = () => {
-    store.toggleCaptchaModal();
+    store.toggleFlashcardModal();
     props.previous();
 }
 
 const submit = () => {
-    store.toggleCaptchaModal();
+    store.toggleFlashcardModal();
     checkAnswer();
     props.next();
 }
 
 const checkAnswer = () => {
     let nGoodAnswers = 0
-    let goodAsnwsers = props.answers?.filter((a) => a.response == true);
+    let goodAsnwsers = props.form.answers?.filter((a) => a.response == true);
     goodAsnwsers?.forEach((a) => {
         if (selectedAnswer.value.includes(a.id)) {
             nGoodAnswers += 1;

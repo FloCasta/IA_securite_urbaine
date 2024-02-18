@@ -62,7 +62,7 @@ let formHeightQuestion: Ref<HeightQuestion> = ref(data.worlds.world1.questions[2
 let formHs: Ref<HolySentence> = ref(data.worlds.world1.questions[13]);
 let formQuestion: Ref<Question> = ref(data.worlds.world1.questions[8]);
 let formHanged: Ref<Hanged> = ref(data.worlds.world1.questions[1]);
-let formFlashcard: Ref<Flashcard> = ref(data.worlds.world1.questions[1]);
+let formFlashcard: Ref<Flashcard> = ref(data.worlds.world1.questions[2]);
 
 const initQuestionsForWorld = () => {
     for (let i = 1; i <= 15; i++) {
