@@ -14,6 +14,11 @@ export class Question {
       this.question = question;
       this.answers = answers;
       this.textAnswer = textAnswer;
+    };
+
+    static fromJSON(jsonData: any): Question {
+      const { id, title, type, question, answers, textAnswer } = jsonData;
+      return new Question(id, title, question, answers, textAnswer);
     }
   }
 export interface QuestionAnswer {

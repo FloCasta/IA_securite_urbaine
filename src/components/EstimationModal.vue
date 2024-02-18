@@ -40,7 +40,7 @@ import { useAlertsStore } from '@/store';
 
 const store = useAlertsStore();
 const props = defineProps({
-    id: { type: String, required: true },
+    id: String,
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },

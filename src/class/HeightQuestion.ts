@@ -15,6 +15,10 @@ export class HeightQuestion {
       this.answers = answers;
       this.textAnswer = textAnswer;
     }
+    static fromJSON(jsonData: any): HeightQuestion {
+      const { id, title, question, answers, textAnswer } = jsonData;
+      return new HeightQuestion(id, title, question, answers, textAnswer);
+    }
   }
 
 export interface HeightAnswer {

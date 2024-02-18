@@ -24,4 +24,9 @@ export class HolySentence {
       this.holy_word = holy_word;
       this.textAnswer = textAnswer;
     }
+
+    static fromJSON(jsonData: any): HolySentence {
+      const { id, title, start_question, end_question, holy_word, textAnswer } = jsonData;
+      return new HolySentence(id, title, start_question, end_question, holy_word, textAnswer);
+    }
   }

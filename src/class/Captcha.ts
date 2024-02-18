@@ -15,6 +15,10 @@ export class Captcha {
     this.answers = answers;
     this.textAnswer = textAnswer;
     }
+    static fromJSON(jsonData: any): Captcha {
+        const { id, title, question, answers, textAnswer } = jsonData;
+        return new Captcha(id, title, question, answers, textAnswer);
+      }
 }
 
 export interface CaptchaAnswer {
