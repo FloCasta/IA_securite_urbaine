@@ -59,9 +59,7 @@ const props = defineProps({
 });
 
 watch(() => props.form, (form) => {
-    selectedItems.value = { item1: null, item2: null };
-    connections.value = [];
-    lines.value = [];
+    reset();
     items.value = form.pairs;
     shuffledItems.value = shuffleItems();
 });
@@ -133,6 +131,7 @@ const previous = () => {
 }
 
 const reset = () => {
+    selectedItems.value = { item1: null, item2: null };
     lines.value = [];
     connections.value = [];
 }
