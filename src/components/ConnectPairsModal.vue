@@ -63,6 +63,7 @@ watch(() => props.form, (form) => {
     connections.value = [];
     lines.value = [];
     items.value = form.pairs;
+    shuffledItems.value = shuffleItems();
 });
 
 const svg = ref(null);
@@ -74,7 +75,6 @@ var shuffledItems = ref([]);
 const connections = ref([]);
 const items = ref([]);
 items.value = props.form.pairs;
-
 
 onBeforeMount(() => {
     shuffledItems.value = shuffleItems();
