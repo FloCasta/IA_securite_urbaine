@@ -41,62 +41,50 @@
           "question": "Trouver les images paires",
           "answers": [
             {
-              "id": 1,
               "answer": "Le maquillage",
               "img": "/captcha/captcha1_answer1.png"
             },
             {
-              "id": 2,
               "answer": "Le masque",
               "img": "/captcha/captcha1_answer2.png"
             },
             {
-              "id": 3,
               "answer": "Les perruques",
               "img": "/captcha/captcha1_answer3.png"
             },
             {
-              "id": 4,
               "answer": "Les fausses barbes",
               "img": "/captcha/captcha1_answer4.png"
             },
             {
-              "id": 5,
               "answer": "Un t-shirt vert",
               "img": "/captcha/captcha1_answer5.png"
             },
             {
-              "id": 6,
               "answer": "Une cravate",
               "img": "/captcha/captcha1_answer6.png"
             },
             {
-              "id": 7,
               "answer": "Le maquillage",
               "img": "/captcha/captcha1_answer1.png"
             },
             {
-              "id": 8,
               "answer": "Le masque",
               "img": "/captcha/captcha1_answer2.png"
             },
             {
-              "id": 9,
               "answer": "Les perruques",
               "img": "/captcha/captcha1_answer3.png"
             },
             {
-              "id": 10,
               "answer": "Les fausses barbes",
               "img": "/captcha/captcha1_answer4.png"
             },
             {
-              "id": 11,
               "answer": "Un t-shirt vert",
               "img": "/captcha/captcha1_answer5.png"
             },
             {
-              "id": 12,
               "answer": "Une cravate",
               "img": "/captcha/captcha1_answer6.png"
             }

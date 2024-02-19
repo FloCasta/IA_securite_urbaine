@@ -22,7 +22,6 @@ export class Flashcard {
 }
 
 export interface FlashcardAnswer {
-    id: number;
     answer: string;
     img: string;
 }
