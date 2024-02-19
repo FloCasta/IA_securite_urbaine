@@ -5,7 +5,7 @@
             <div class="head_modal">
                 <div class="title_modal">
                     <h2>{{ props.form.title }}</h2>
-                </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleFlashcardModal" />
+                </div> <img alt="Fermer" class="close_modal" src='/buttons/close.png' @click="store.toggleFlashCardModal" />
             </div>
             <div class='main_modal'>
                 <p>Question</p>
@@ -59,7 +59,6 @@ cards.value = cards.value.map(card => {
     };
 });
 
-console.log(cards.value);
 const flippedCards = ref([]);
 const matchedCards = ref([]);
 const score = ref(0);
@@ -100,12 +99,12 @@ const checkMatch = () => {
 };
 
 const previous = () => {
-    store.toggleFlashcardModal();
+    store.toggleFlashCardModal();
     props.previous();
 }
 
 const submit = () => {
-    store.toggleFlashcardModal();
+    store.toggleFlashCardModal();
     checkAnswer();
     props.next();
 }
