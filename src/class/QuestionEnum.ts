@@ -8,5 +8,4 @@ export enum QuestionEnum {
   Captcha = 'captcha',
   Flashcard = 'flashcard',
   ConnectPairs = 'connectpairs',
-  Flashcard = 'flashcard',
 }

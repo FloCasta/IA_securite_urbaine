@@ -31,7 +31,6 @@ import CaptchaModal from '@/components/CaptchaModal.vue';
 import HangedModal from '@/components/HangedModal.vue';
 import FlashcardModal from '@/components/FlashcardModal.vue'
 import ConnectPairsModal from '@/components/ConnectPairsModal.vue';
-import FlashcardModal from '@/components/FlashcardModal.vue';
 import { ref, type Ref } from 'vue';
 import ResultModal from '@/components/ResultModal.vue';
 import { Point } from '@/class/Point';
@@ -46,7 +45,6 @@ import { Hanged } from '@/class/Hanged';
 import { Flashcard } from '@/class/Flashcard';
 import data from '@/data/questions.json';
 import { ConnectPairs } from '@/class/ConnectPairs';
-import { Flashcard } from '@/class/Flashcard';
 
 const store = useAlertsStore();
 
@@ -65,7 +63,7 @@ let listQuestions = [];
 let formCaptcha: Ref<Captcha> = ref(data.worlds.world1.questions[6]);
 let formDaD: Ref<DragAndDrop> = ref(data.worlds.world1.questions[4]);
 let formEstimation: Ref<Estimation> = ref(data.worlds.world1.questions[3]);
-let formHeightQuestion: Ref<HeightQuestion> = ref(data.worlds.world1.questions[2]);
+let formHeightQuestion: Ref<HeightQuestion> = ref(data.worlds.world1.questions[9]);
 let formHs: Ref<HolySentence> = ref(data.worlds.world1.questions[13]);
 let formQuestion: Ref<Question> = ref(data.worlds.world1.questions[8]);
 let formHanged: Ref<Hanged> = ref(data.worlds.world1.questions[1]);
