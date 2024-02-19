@@ -11,7 +11,7 @@
         <p>Question</p>
         <div class="question_holysentence">
           {{ props.form.start_question }}
-          <input type="text" class="field_input" v-bind:class="{ field_input_good_answer: answerPage }"
+          <input type="text" autocomplete="off" class="field_input" v-bind:class="{ field_input_good_answer: answerPage }"
             v-bind:readonly="answerPage" name="name" id='name' v-model="selectedAnswer" required>
           {{ props.form.end_question }}
         </div>

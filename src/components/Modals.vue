@@ -14,7 +14,10 @@
         v-show="store.isCaptchaModalVisible" />
     <HangedModal :previous=previous :next=next :addPoint=addPoint :form="formHanged" v-show="store.isHangedModalVisible">
     </HangedModal>
-    <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard" v-show="true"></FlashcardModal>
+    <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard"
+        v-show="store.isFlashcardModalVisible"></FlashcardModal>
+    <ConnectPairsModal :previous=previous :next=next :addPoint=addPoint :form="formPairs"
+        v-show="store.isConnectPairsModalVisible"></ConnectPairsModal>
 </template>
   
 <script setup lang="ts">
@@ -26,7 +29,8 @@ import HeightQuestionModal from '@/components/HeightQuestionModal.vue';
 import EstimationModal from '@/components/EstimationModal.vue';
 import CaptchaModal from '@/components/CaptchaModal.vue';
 import HangedModal from '@/components/HangedModal.vue';
-import FlashcardModal from '@/components/FlashcardModal.vue';
+import FlashcardModal from '@/components/FlashcardModal.vue'
+import ConnectPairsModal from '@/components/ConnectPairsModal.vue';
 import { ref, type Ref } from 'vue';
 import ResultModal from '@/components/ResultModal.vue';
 import { Point } from '@/class/Point';
@@ -40,6 +44,7 @@ import { HolySentence } from '@/class/HolySentence';
 import { Hanged } from '@/class/Hanged';
 import { Flashcard } from '@/class/Flashcard';
 import data from '@/data/questions.json';
+import { ConnectPairs } from '@/class/ConnectPairs';
 
 const store = useAlertsStore();
 
@@ -63,6 +68,7 @@ let formHs: Ref<HolySentence> = ref(data.worlds.world1.questions[13]);
 let formQuestion: Ref<Question> = ref(data.worlds.world1.questions[8]);
 let formHanged: Ref<Hanged> = ref(data.worlds.world1.questions[1]);
 let formFlashcard: Ref<Flashcard> = ref(data.worlds.world1.questions[2]);
+let formPairs: Ref<ConnectPairs> = ref(data.worlds.world4.questions[1]);
 
 const initQuestionsForWorld = () => {
     for (let i = 1; i <= 15; i++) {
@@ -91,6 +97,8 @@ const initQuestionsForWorld = () => {
                 break;
             case QuestionEnum.Flashcard:
                 listQuestions[i - 1] = Flashcard.fromJSON(question);
+            case QuestionEnum.ConnectPairs:
+                listQuestions[i - 1] = ConnectPairs.fromJSON(question);
                 break;
         }
     }
@@ -163,6 +171,10 @@ const openGame = () => {
         case QuestionEnum.Flashcard:
             formFlashcard.value = currentQuestions[nextQuestion.value - 1] as Flashcard;
             store.toggleFlashcardModal();
+            break;
+        case QuestionEnum.ConnectPairs:
+            formPairs.value = currentQuestions[nextQuestion.value - 1] as ConnectPairs;
+            store.toggleConnectPairsModal();
             break;
     }
 
@@ -296,6 +308,10 @@ h3 {
 
     .btn_previous {
         background-color: grey;
+    }
+
+    .btn_reset {
+        background-color: #BB5326;
     }
 
     .btn_next {

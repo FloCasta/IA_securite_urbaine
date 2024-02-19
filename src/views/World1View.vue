@@ -13,7 +13,6 @@
         </div>
         <RessourceModal v-if="store.isRessourceModalVisible" :subject="'videosurveillance'"></RessourceModal>
         <Modals ref="modal" world="world1" :v-show="store.isModalsVisible"></Modals>
-
     </div>
 </template>
 
