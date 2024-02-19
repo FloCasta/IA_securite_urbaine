@@ -14,8 +14,7 @@
         v-show="store.isCaptchaModalVisible" />
     <HangedModal :previous=previous :next=next :addPoint=addPoint :form="formHanged" v-show="store.isHangedModalVisible">
     </HangedModal>
-    <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard"
-        v-show="store.isFlashcardModalVisible"></FlashcardModal>
+    <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard" v-show="true"></FlashcardModal>
 </template>
   
 <script setup lang="ts">
@@ -40,6 +39,7 @@ import { Question } from '@/class/Question';
 import { HolySentence } from '@/class/HolySentence';
 import { Hanged } from '@/class/Hanged';
 import { Flashcard } from '@/class/Flashcard';
+import data from '@/data/questions.json';
 
 const store = useAlertsStore();
 

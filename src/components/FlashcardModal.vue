@@ -12,9 +12,9 @@
                 <div class="question_modal">{{ props.form.question }}</div>
                 <p>Selection</p>
                 <div class="answers_flashcard">
-                    <img class="img_flashcard" :src=answer.img :alt=answer.answer v-for="answer in props.form.answers"
-                        @click="clickAnswer(answer.id)"
-                        v-bind:class="{ checked_flashcard: selectedAnswer.includes(answer.id) }">
+                    <img class="img_flashcard" :src="card.flipped == true || card.matched == true ? card.img : img"
+                        :alt=card.answer v-for="(card, index) in cards" @click="flipCard(index)"
+                        v-bind:class="{ flipped_flashcard: card.flipped, matched_flashcard: card.matched }">
                 </div>
                 <div class="text_answer_modal" v-show="answerPage">Réponse : {{ props.form.textAnswer }}</div>
             </div>
@@ -45,21 +45,59 @@ const props = defineProps({
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
-const selectedAnswer = ref<number[]>([]);
+const selectedAnswer = ref(false);
 const answerPage = false;
+
+const img = "public/world1/castle2.png";
+
+const cards = ref(props.form.answers);
+cards.value = cards.value.map(card => {
+    return {
+        ...card,
+        flipped: false,
+        matched: false
+    };
+});
+
+console.log(cards.value);
+const flippedCards = ref([]);
+const matchedCards = ref([]);
+const score = ref(0);
 
 watch(() => props.form, (form) => {
     setTimeout(() => { selectedAnswer.value = []; }, 50);
 });
 
-const clickAnswer = (a: number) => {
-    const index = selectedAnswer.value.indexOf(a);
-    if (index !== -1) {
-        selectedAnswer.value.splice(index, 1);
-    } else {
-        selectedAnswer.value.push(a);
+const flipCard = (id: number) => {
+    if (cards.value[id].flipped || cards.value[id].matched) return;
+    cards.value[id].flipped = true;
+    flippedCards.value.push(cards.value[id]);
+    if (flippedCards.value.length === 2) {
+        checkMatch();
     }
-}
+};
+
+const checkMatch = () => {
+    const card1 = flippedCards.value[0];
+    const card2 = flippedCards.value[1];
+    if (card1.answer === card2.answer) {
+        card1.matched = true;
+        card2.matched = true;
+        card1.flipped = false;
+        card2.flipped = false;
+        matchedCards.value.push(card1, card2);
+        score.value += 1;
+        if (matchedCards.value.length === cards.value.length) {
+            gameOver.value = true;
+        }
+    } else {
+        setTimeout(() => {
+            card1.flipped = false;
+            card2.flipped = false;
+        }, 1000);
+    }
+    flippedCards.value = [];
+};
 
 const previous = () => {
     store.toggleFlashcardModal();
@@ -73,6 +111,7 @@ const submit = () => {
 }
 
 const checkAnswer = () => {
+    //TODO
     let nGoodAnswers = 0
     let goodAsnwsers = props.form.answers?.filter((a) => a.response == true);
     goodAsnwsers?.forEach((a) => {
@@ -102,7 +141,6 @@ const checkAnswer = () => {
     align-items: center;
     max-height: 38vh;
     border-radius: .7rem;
-    background-color: #638e995d;
     justify-content: space-around;
 }
 
@@ -110,8 +148,8 @@ const checkAnswer = () => {
     display: flex;
     align-items: center;
     cursor: pointer;
-    width: 12vw;
-    height: 15vh;
+    width: 10vw;
+    height: 11vh;
     border-radius: .7rem;
     margin: .5vh .5vw;
     font-size: 0.8rem;
@@ -130,10 +168,18 @@ const checkAnswer = () => {
     }
 }
 
-.checked_flashcard {
-    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
-    transform: translate3d(0, 0, 3px);
-    transition: filter 0.3s ease, transform 0.3s ease;
+.flipped_flashcard {
+    transform-style: preserve-3d;
+    transform: rotateY(0deg);
+    transition: transform 0.5s;
+}
+
+.flipped_flashcard:active {
+    transform: rotateY(180deg);
+}
+
+.matched_flashcard {
+    opacity: 0.5;
 }
 
 @media screen and (max-width: 900px) {
@@ -143,8 +189,8 @@ const checkAnswer = () => {
     }
 
     .img_flashcard {
-        width: 30vw;
-        height: 13vh;
+        width: 20vw;
+        height: 10vh;
     }
 }
 </style>
