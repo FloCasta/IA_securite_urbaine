@@ -47,8 +47,6 @@ import { onBeforeMount, ref, watch } from 'vue';
 import { ConnectPairs, } from '@/class/ConnectPairs';
 import { Point } from '@/class/Point';
 
-const answerPage = false;
-
 const store = useAlertsStore();
 
 const props = defineProps({
@@ -56,12 +54,19 @@ const props = defineProps({
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },
+    isReadOnly: Boolean
 });
 
-watch(() => props.form, (form) => {
-    reset();
-    items.value = form.pairs;
-    shuffledItems.value = store.shuffleItems(items.value);
+watch([() => props.form, () => props.isReadOnly], ([form, isReadOnly]) => {
+    answerPage.value = isReadOnly;
+    if(answerPage.value){
+        connections.value=form.savedAnswersConnections;
+        lines.value=form.savedAnswersLines;
+    }else {
+        reset();
+        items.value = form.pairs;
+        shuffledItems.value = store.shuffleItems(items.value);
+    }
 });
 
 const svg = ref(null);
@@ -73,7 +78,7 @@ var shuffledItems = ref([]);
 const connections = ref([]);
 const items = ref([]);
 items.value = props.form.pairs;
-
+const answerPage = ref<Boolean>(false);
 
 onBeforeMount(() => {
     shuffledItems.value = store.shuffleItems(items.value);
@@ -145,14 +150,17 @@ const checkAnswer = () => {
             score++;
         }
     });
-
+    let point = 0;
     if (score == items.value.length)
-        props.addPoint(new Point(1, ""));
+        point = 1;
     else if (score == 0)
-        props.addPoint(new Point(0, ""));
+        point = 0;
     else
-        props.addPoint(new Point(0.5, ""));
+        point = 0.5;
 
+    let form : ConnectPairs = { ...props.form, saveAnswer: props.form.saveAnswer };
+    form.saveAnswer(connections.value,lines.value);
+    props.addPoint(new Point(point, form, ""));
     connections.value = [];
 };
 

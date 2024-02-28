@@ -20,7 +20,7 @@
         <div class='btn_submit_modal'>
             <button class="btn_previous" @click="previous" v-show="!answerPage">Précédent</button>
             <button class="btn_next" @click="submit" v-show="!answerPage">Suivant</button>
-            <button class="btn_return" @click="submit" v-show="answerPage">Retour</button>
+            <button class="btn_return" @click="back" v-show="answerPage">Retour</button>
         </div>
     </div>
 </template>
@@ -39,15 +39,27 @@ const props = defineProps({
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },
-
+    isReadOnly: Boolean
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref<number[]>([]);
-const answerPage = false;
+const answerPage = ref<Boolean>(false);
 
-watch(() => props.form, (form) => {
-    setTimeout(() => { selectedAnswer.value = []; }, 50);
+watch([() => props.form, () => props.isReadOnly], ([form, isReadOnly]) => {
+    answerPage.value = isReadOnly;
+
+    setTimeout(() => { form.savedAnswers.forEach((e)=>{
+            if(answerPage.value){
+                setTimeout(() => { form.savedAnswers.forEach((e)=>{
+                    clickAnswer(e);
+                }) }, 50);
+            }else{
+                setTimeout(() => { selectedAnswer.value = []; }, 50);
+            }
+        }) }, 50);
+
+    
 });
 
 const clickAnswer = (a: number) => {
@@ -74,6 +86,7 @@ const checkAnswer = () => {
     let nGoodAnswers = 0
     let goodAsnwsers = props.form.answers?.filter((a) => a.response == true);
     let display = '';
+    props.form.saveAnswer(selectedAnswer.value);
     goodAsnwsers?.forEach((a) => {
         if (selectedAnswer.value.includes(a.id)) {
             display += a.title + ',';
@@ -91,7 +104,16 @@ const checkAnswer = () => {
         point = 0;
     else
         point = 0.5
-    props.addPoint(new Point(point, "type", display.slice(0, -1)));
+        
+    let form : Captcha = { ...props.form, saveAnswer: props.form.saveAnswer };
+    form.saveAnswer(Array.from(selectedAnswer.value));
+    props.addPoint(new Point(point, form, display.slice(0, -1)));
+
+}
+
+const back = () =>{
+    store.toggleCaptchaModal();
+    store.toggleResultModalVisible();
 }
 
 </script>

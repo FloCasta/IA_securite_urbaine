@@ -47,16 +47,22 @@ const props = defineProps({
   next: { type: Function, required: true },
   previous: { type: Function, required: true },
   addPoint: { type: Function, required: true },
+  isReadOnly: Boolean
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref<number[]>([]);
-const answerPage = false;
+const answerPage = ref<Boolean>(false);
 const answers = ref(props.form.answers);
 
-watch(() => props.form, (form) => {
+watch([() => props.form, () => props.isReadOnly], ([form, isReadOnly]) => {
+  answerPage.value = isReadOnly;
+  if(answerPage.value){
+    setTimeout(()=>{selectedAnswer.value = form.savedAnswer;answers.value=form.answers},50);
+  }else {
     setTimeout(()=>{selectedAnswer.value = [];answers.value=form.answers},50);
-  });
+  }
+});
 
 function onMove() {
   if (selectedAnswer.value.length == 4) return false
@@ -94,9 +100,11 @@ const checkAnswer = () =>{
     point = 0;
   else 
     point = 0.5
-  props.addPoint(new Point(point,"type",display.slice(0, -1)));
+  
+  let form : DragAndDrop = { ...props.form, saveAnswer: props.form.saveAnswer };
+  form.saveAnswer(selectedAnswer.value);
+  props.addPoint(new Point(point, form, display.slice(0, -1)));
 }
-
 
 </script>
   

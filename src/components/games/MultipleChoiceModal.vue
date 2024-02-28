@@ -38,14 +38,20 @@ const props = defineProps({
   next: { type: Function, required: true },
   previous: { type: Function, required: true },
   addPoint: { type: Function, required: true },
+  isReadOnly: Boolean
 });
 
 const data = ref({ questionId: null as String | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref<number[]>([]);
-const answerPage = false;
+const answerPage = ref<Boolean>(false);
 
-watch(() => props.form, (form) => {
-  setTimeout(() => { selectedAnswer.value = []; }, 50);
+watch([() => props.form, () => props.isReadOnly], ([form, isReadOnly]) => {
+  answerPage.value = isReadOnly;
+  if(answerPage.value){
+    selectedAnswer.value = form.savedAnswers;
+  }else {
+    setTimeout(() => { selectedAnswer.value = []; }, 50);
+  }
 });
 
 const clickAnswer = (a: number) => {
@@ -90,7 +96,10 @@ const checkAnswer = () => {
     point = 0;
   else
     point = 0.5
-  props.addPoint(new Point(point, "type", display.slice(0, -1)));
+
+  let form : MultipleChoice = { ...props.form, saveAnswer: props.form.saveAnswer };
+  form.saveAnswer(Array.from(selectedAnswer.value));
+  props.addPoint(new Point(point, form, display.slice(0, -1)));
 }
 
 </script>

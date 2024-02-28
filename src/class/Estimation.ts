@@ -11,10 +11,11 @@ export class Estimation{
     minAnswer: number;
     maxAnswer: number;
     textAnswer: string;
+    savedAnswer : number = 0;
 
     constructor(id:string, title:string, question:string,
         minNumber:number,maxNumber:number,increment:number,minAnswer:number,
-        maxAnswer:number,textAnswer:string){
+        maxAnswer:number,textAnswer:string,savedAnswer:number){
             this.id = id; 
             this.title = title;
             this.question = question;
@@ -24,9 +25,13 @@ export class Estimation{
             this.minAnswer = minAnswer;
             this.maxAnswer = maxAnswer;
             this.textAnswer = textAnswer;
+            this.savedAnswer = savedAnswer || 0;
     }
     static fromJSON(jsonData: any): Estimation {
-        const { id, title, question, minNumber, maxNumber, increment, minAnswer, maxAnswer, textAnswer } = jsonData;
-        return new Estimation(id, title, question, minNumber, maxNumber, increment, minAnswer, maxAnswer, textAnswer);
+        const { id, title, question, minNumber, maxNumber, increment, minAnswer, maxAnswer, textAnswer, savedAnswer } = jsonData;
+        return new Estimation(id, title, question, minNumber, maxNumber, increment, minAnswer, maxAnswer, textAnswer, savedAnswer);
       }
+    saveAnswer(savedAnswer:number){
+        this.savedAnswer = savedAnswer;
+    }
 }

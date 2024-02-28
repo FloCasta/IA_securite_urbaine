@@ -35,18 +35,24 @@ import { HeightQuestion } from '@/class/HeightQuestion';
 const store = useAlertsStore();
 
 const props = defineProps({
-    form: { type: HeightQuestion, required: true },
-    next: { type: Function, required: true },
-    previous: { type: Function, required: true },
-    addPoint: { type: Function, required: true },
+  form: { type: HeightQuestion, required: true },
+  next: { type: Function, required: true },
+  previous: { type: Function, required: true },
+  addPoint: { type: Function, required: true },
+  isReadOnly: Boolean
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref<number[]>([]);
-const answerPage = false;
+const answerPage = ref<Boolean>(false);
 
-watch(() => props.form, (form) => {
-    setTimeout(() => { selectedAnswer.value = []; }, 50);
+watch([() => props.form, () => props.isReadOnly], ([form, isReadOnly]) => {
+    answerPage.value = isReadOnly;
+    if(answerPage.value){
+        selectedAnswer.value = form.savedAnswers ? form.savedAnswers : [];
+    }else {
+        setTimeout(() => { selectedAnswer.value = []; }, 50);
+    }
 });
 
 const clickAnswer = (a: number) => {
@@ -90,7 +96,10 @@ const checkAnswer = () => {
         point = 0;
     else
         point = 0.5
-    props.addPoint(new Point(point, "type", display));
+        
+    let form : HeightQuestion = { ...props.form, saveAnswer: props.form.saveAnswer };
+    form.saveAnswer(Array.from(selectedAnswer.value));
+    props.addPoint(new Point(point, form, display));
 }
 
 </script>

@@ -37,18 +37,18 @@ const props = defineProps({
     next: { type: Function, required: true },
     previous: { type: Function, required: true },
     addPoint: { type: Function, required: true },
-
+    isReadOnly: Boolean
 });
 
 const data = ref({ questionId: null as string | null, selectedAnswer: [] as number[] });
 const selectedAnswer = ref(false);
-const answerPage = false;
+const answerPage = ref<Boolean>(false);
 
 const img = '/world1/castle2.png';
 
 const gameOver = ref(false);
 
-let cards = ref(props.form.answers);
+const cards = ref(Array.from(props.form.answers));
 cards.value.push(...cards.value);
 cards.value = store.shuffleItems(cards.value);
 
@@ -64,10 +64,12 @@ const flippedCards = ref([]);
 const matchedCards = ref([]);
 const score = ref(0);
 
-watch(() => props.form, (form) => {
+watch([() => props.form, () => props.isReadOnly], ([form, isReadOnly]) => {
+    answerPage.value=isReadOnly;
     score.value = 0;
     gameOver.value = false;
-    cards.value = form.answers;
+    cards.value = []
+    cards.value = [...form.answers];
     cards.value.push(...cards.value);
     cards.value = store.shuffleItems(cards.value);
     cards.value = cards.value.map(card => {
@@ -81,7 +83,13 @@ watch(() => props.form, (form) => {
         selectedAnswer.value = false;
         flippedCards.value = [];
     }, 50);
+    setTimeout(() => {
+        if(answerPage.value){
+            cards.value = form.savedAnswers
+        }
+    }, 50);
 });
+
 
 const flipCard = (id: number) => {
     if (cards.value[id].flipped || cards.value[id].matched) return;
@@ -131,14 +139,17 @@ const checkAnswer = () => {
     let display = '';
     if (gameOver.value == true) {
         point = 1;
-        display = 'Flashcard Réussi' //later
+        display = 'Flashcard Réussi'
     }
     else {
         point = 0;
-        display = 'Flashcard Perdu' //later
+        display = 'Flashcard Perdu'
     }
-
-    props.addPoint(new Point(point, "type", display));
+    
+    let form : Flashcard = { ...props.form, saveAnswer: props.form.saveAnswer };
+    form.saveAnswer(cards.value);
+    props.addPoint(new Point(point, form, display));
+    
 }
 
 </script>

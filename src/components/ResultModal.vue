@@ -10,16 +10,16 @@
           </div>
           <div class="score">
             <div class="questionsReponses">
-              <div v-for="(text, index) in messages" :style="getBackgroundColor(index)" :key="index" class="question">
-              {{ text }}
-            </div>
+              <div @click="goTo(point.form)" v-for="(point, index) in $props.points" :style="getBackgroundColor(index)" :key="index" class="question">
+              {{ point.displayAnswer.split('\n').join('').substring(0, 160) }}
+              </div>
             </div>
             <div class="scoreRound" >
               <div :style="getScoreRoundColor(displayScore)"><p>{{ displayScore }}/5</p></div>
             </div>
           </div>
           <div class="btn_submit_modal">
-            <button class="btn_close" @click="submit">Fermer</button>
+            <button class="btn_close" @click="close">Fermer</button>
           </div>
       </div>
     </Transition>
@@ -36,20 +36,18 @@
     title: String,
     points: { type: Array<Point>, required: true },
     nLevel: Number,
-    nWorld: Number
+    nWorld: Number,
+    openReadOnly: { type: Function, required: true }
   });
 
   const store = useAlertsStore();
 
   let score = 0;
   let pointsOnly = props.points!.map((p)=> p.point);
-  let messages = props.points!.map((m)=> m.displayAnswer);
-  
 
   watch(() => props.points, (points) => {
     if(points.length==5){
       pointsOnly = points.map((p)=> p.point);
-      messages = points.map((m)=> m.displayAnswer?.split('\n').join('').substring(0, 160));
       displayScore.value = pointsOnly.reduce((acc, cur) => acc + cur, 0);
     }
   });
@@ -96,8 +94,12 @@
     else return { backgroundColor: 'rgba(200, 0, 0,0.1)' }
   }
 
+  const goTo = (form:any) => {
+    props.openReadOnly(form);
+    store.toggleResultModalVisible();
+  }
 
-  const submit = () => {
+  const close = () => {
     store.toggleResultModalVisible();
   }
   

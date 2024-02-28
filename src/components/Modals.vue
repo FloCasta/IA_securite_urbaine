@@ -1,23 +1,24 @@
 <template>
     <div>
-        <ResultModal ref="result_modal" :nWorld=nWorld :nLevel=nLevel :points=points v-show="store.isResultModalVisible" />
-        <HolySentenceModal :previous=previous :next=next :addPoint=addPoint :form="HolySentence.fromJSON(formHs)"
-            v-show="store.isHolySentenceModalVisible" />
-        <MultipleChoiceModal :previous=previous :next=next :addPoint=addPoint :form="MultipleChoice.fromJSON(formMultipleChoice)"
-            v-show="store.isMultipleChoiceModalVisible" />
-        <DragAndDropModal :previous=previous :next=next :addPoint=addPoint :form="DragAndDrop.fromJSON(formDaD)"
-            v-show="store.isDragAndDropModalVisible" />
-        <HeightQuestionModal :previous=previous :next=next :addPoint=addPoint :form="HeightQuestion.fromJSON(formHeightQuestion)"
-            v-show="store.isHeightQuestionModalVisible" />
-        <EstimationModal :previous=previous :next=next :addPoint=addPoint :form="Estimation.fromJSON(formEstimation)"
-            v-show="store.isEstimationModalVisible" />
-        <CaptchaModal :previous=previous :next=next :addPoint=addPoint :form="Captcha.fromJSON(formCaptcha)"
-            v-show="store.isCaptchaModalVisible" />
-        <HangedModal :previous=previous :next=next :addPoint=addPoint :form="Hanged.fromJSON(formHanged)" v-show="store.isHangedModalVisible" />
-        <ConnectPairsModal :previous=previous :next=next :addPoint=addPoint :form="ConnectPairs.fromJSON(formPairs)"
-            v-show="store.isConnectPairsModalVisible" />
-        <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="Flashcard.fromJSON(formFlashcard)"
-            v-show="store.isFlashCardModalVisible" />
+        <ResultModal ref="result_modal" :openReadOnly=openReadOnly :nWorld=nWorld :nLevel=nLevel :points=points v-show="store.isResultModalVisible" />
+        <HolySentenceModal :previous=previous :next=next :addPoint=addPoint :form="formHs"
+            :isReadOnly="isReadOnly" v-show="store.isHolySentenceModalVisible" />
+        <MultipleChoiceModal :previous=previous :next=next :addPoint=addPoint :form="formMultipleChoice"
+            :isReadOnly="isReadOnly" v-show="store.isMultipleChoiceModalVisible" />
+        <DragAndDropModal :previous=previous :next=next :addPoint=addPoint :form="formDaD"
+            :isReadOnly="isReadOnly" v-show="store.isDragAndDropModalVisible" />
+        <HeightQuestionModal :previous=previous :next=next :addPoint=addPoint :form="formHeightQuestion"
+            :isReadOnly="isReadOnly" v-show="store.isHeightQuestionModalVisible" />
+        <EstimationModal :previous=previous :next=next :addPoint=addPoint :form="formEstimation"
+            :isReadOnly="isReadOnly" v-show="store.isEstimationModalVisible" />
+        <CaptchaModal :previous=previous :next=next :addPoint=addPoint :form="formCaptcha"
+            :isReadOnly="isReadOnly" v-show="store.isCaptchaModalVisible" />
+        <HangedModal :previous=previous :next=next :addPoint=addPoint :form="formHanged"
+            :isReadOnly="isReadOnly" v-show="store.isHangedModalVisible" />
+        <ConnectPairsModal :previous=previous :next=next :addPoint=addPoint :form="formPairs"
+            :isReadOnly="isReadOnly" v-show="store.isConnectPairsModalVisible" />
+        <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard"
+            :isReadOnly="isReadOnly" v-show="store.isFlashCardModalVisible" />
     </div>
 </template>
   
@@ -60,6 +61,7 @@ const props = defineProps({
 
 const store = useAlertsStore();
 
+const isReadOnly = ref<Boolean>(false);
 const result_modal = ref<any>(null);
 const nLevel = ref(0);
 const nWorld = ref(0);
@@ -142,26 +144,27 @@ const initQuestionsForWorld = () => {
 
 const addPoint = (point: Point) => {
     let copiedArray = Array.from(points.value);
-    //[...points.value]
     copiedArray[nextQuestion.value - 1] = point;
     points.value = copiedArray;
 }
 
 const launchLevel = (l: number, scorePrevious: number, w: number) => {
     nLevel.value = l;
+    isReadOnly.value=false;
     nWorld.value = w;
+    nextQuestion.value = 0;
+    currentQuestions = [];
+    listQuestions = [];
     initQuestionsForWorld();
     if (scorePrevious >= 3 || nLevel.value == 1) {
 
-        currentQuestions = []
+        
         for (let i = 0; i < 5; i++) {
             currentQuestions[i] = listQuestions[i + (5 * (nLevel.value - 1))]
         }
-        nextQuestion.value = 0;
+        
         points.value = []
         store.toggleModals();
-        console.log(currentQuestions)
-        console.log(listQuestions)
         next()
     }
 }
@@ -183,6 +186,13 @@ const next = () => {
         store.toggleResultModalVisible();
         result_modal.value?.updatePoints()
     }
+}
+
+const openReadOnly = (form : any) =>{
+    isReadOnly.value=true;
+    currentQuestions=[form];
+    nextQuestion.value=1;
+    setTimeout(() => { openGame(); }, 50);
 }
 
 const openGame = () => {
