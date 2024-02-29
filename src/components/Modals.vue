@@ -86,7 +86,7 @@ let formDaD: Ref<DragAndDrop> = ref(dataW2.questions[5]);
 let formFlashcard: Ref<Flashcard> = ref(dataW2.questions[7]);
 
 watch(() => props.world, initWorld, { immediate: true });
-
+window.addEventListener('beforeunload', () => { store.closeAllModals();});
 function initWorld() {
     switch (props.world) {
         case "world1":

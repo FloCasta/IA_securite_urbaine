@@ -116,6 +116,29 @@ export const useAlertsStore = defineStore('alerts', {
         }
         return shuffledItems;
       }
+    },
+    closeAllModals(){
+      if(this.isHolySentenceModalVisible)
+        this.toggleHolySentenceModal()       
+      if(this.isMultipleChoiceModalVisible)
+        this.toggleMultipleChoiceModal()    
+      if(this.isDragAndDropModalVisible)
+        this.toggleDragAndDropModal()
+      if(this.isHeightQuestionModalVisible)
+        this.toggleHeightQuestionModal()
+      if(this.isEstimationModalVisible)
+        this.toggleEstimationModal()     
+      if(this.isCaptchaModalVisible)
+        this.toggleCaptchaModal()
+      if(this.isHangedModalVisible)
+        this.toggleHangedModal()
+      if(this.isConnectPairsModalVisible)
+        this.toggleConnectPairsModal()
+      if(this.isFlashCardModalVisible)
+        this.toggleFlashCardModal()
+      if(this.isResultModalVisible)
+        this.toggleResultModalVisible()
+      
     }
   }
 })
