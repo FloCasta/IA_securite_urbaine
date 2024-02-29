@@ -75,15 +75,15 @@ let currentQuestions = [];
 let listQuestions = [];
 
 // Initialize forms with default values to avoid errors
-let formMultipleChoice: Ref<MultipleChoice> = ref(dataW1.questions[1]);
-let formHanged: Ref<Hanged> = ref(dataW1.questions[3]);
-let formCaptcha: Ref<Captcha> = ref(dataW1.questions[4]);
-let formEstimation: Ref<Estimation> = ref(dataW1.questions[6]);
-let formHs: Ref<HolySentence> = ref(dataW1.questions[8]);
-let formPairs: Ref<ConnectPairs> = ref(dataW1.questions[9]);
-let formHeightQuestion: Ref<HeightQuestion> = ref(dataW1.questions[13]);
-let formDaD: Ref<DragAndDrop> = ref(dataW2.questions[5]);
-let formFlashcard: Ref<Flashcard> = ref(dataW2.questions[7]);
+let formMultipleChoice: Ref<MultipleChoice> = ref(MultipleChoice.fromJSON(dataW1.questions[1]));
+let formHanged: Ref<Hanged> = ref(Hanged.fromJSON(dataW1.questions[3]));
+let formCaptcha: Ref<Captcha> = ref(Captcha.fromJSON(dataW1.questions[4]));
+let formEstimation: Ref<Estimation> = ref(Estimation.fromJSON(dataW1.questions[6]));
+let formHs: Ref<HolySentence> = ref(HolySentence.fromJSON(dataW1.questions[8]));
+let formPairs: Ref<ConnectPairs> = ref(ConnectPairs.fromJSON(dataW1.questions[9]));
+let formHeightQuestion: Ref<HeightQuestion> = ref(HeightQuestion.fromJSON(dataW1.questions[13]));
+let formDaD: Ref<DragAndDrop> = ref(DragAndDrop.fromJSON(dataW2.questions[5]));
+let formFlashcard: Ref<Flashcard> = ref(Flashcard.fromJSON(dataW2.questions[7]));
 
 watch(() => props.world, initWorld, { immediate: true });
 window.addEventListener('beforeunload', () => { store.closeAllModals();});

@@ -159,7 +159,7 @@ const checkAnswer = () => {
         point = 0.5;
 
     let form : ConnectPairs = { ...props.form, saveAnswer: props.form.saveAnswer };
-    form.saveAnswer(connections.value,lines.value);
+    form.saveAnswer(Array.from(connections.value),Array.from(lines.value));
     props.addPoint(new Point(point, form, ""));
     connections.value = [];
 };

@@ -7,9 +7,9 @@ export class DragAndDrop {
     question: string;
     answers: DragAndDropAnswer[];
     textAnswer: string;
-    savedAnswer: any[] = [];
+    savedAnswer: number[] = [];
   
-    constructor(id: string, title: string, question: string, answers: DragAndDropAnswer[], textAnswer: string, savedAnswer?: any[]) {
+    constructor(id: string, title: string, question: string, answers: DragAndDropAnswer[], textAnswer: string, savedAnswer?: number[]) {
       this.id = id;
       this.title = title;
       this.question = question;
@@ -22,7 +22,7 @@ export class DragAndDrop {
       return new DragAndDrop(id, title, question, answers, textAnswer, savedAnswer);
     }
 
-    saveAnswer(answer: any[]){
+    saveAnswer(answer: number[]){
       this.savedAnswer = answer;
     }
 

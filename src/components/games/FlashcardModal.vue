@@ -147,7 +147,7 @@ const checkAnswer = () => {
     }
     
     let form : Flashcard = { ...props.form, saveAnswer: props.form.saveAnswer };
-    form.saveAnswer(cards.value);
+    form.saveAnswer(Array.from(cards.value));
     props.addPoint(new Point(point, form, display));
     
 }

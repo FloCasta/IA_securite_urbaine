@@ -102,7 +102,7 @@ const checkAnswer = () =>{
     point = 0.5
   
   let form : DragAndDrop = { ...props.form, saveAnswer: props.form.saveAnswer };
-  form.saveAnswer(selectedAnswer.value);
+  form.saveAnswer(Array.from(selectedAnswer.value));
   props.addPoint(new Point(point, form, display.slice(0, -1)));
 }
 

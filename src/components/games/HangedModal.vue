@@ -213,10 +213,12 @@ const checkAnswer = () => {
     }
 
     let form : Hanged = { ...props.form, saveAnswer: props.form.saveAnswer };
+    console.log(alphabet.value)
+    console.log(emptyWord.value)
     form.saveAnswer(
         selectedAnswer.value,
-        alphabet.value,
-        emptyWord.value,
+        Array.from(alphabet.value),
+        Array.from(emptyWord.value),
         document.getElementById('canvas') as HTMLCanvasElement
     );
     props.addPoint(new Point(point, form, display));

@@ -10,12 +10,12 @@ export class Hanged {
     textAnswer: string;
     selectedAnswer:string = "";
     alphabet: any[] = [];
-    emptyWord: any[] = [];
+    emptyWord: string[] = [];
     canvas: any = null;
 
     constructor(id: string, title: string, start_question: string, end_question: string,
         word: string, textAnswer: string, selectedAnswer?: string, alphabet?:any[],
-        emptyWord?: any[], canvas?: HTMLCanvasElement) {
+        emptyWord?: string[], canvas?: HTMLCanvasElement) {
         this.id = id;
         this.title = title;
         this.start_question = start_question;
@@ -33,7 +33,7 @@ export class Hanged {
         return new Hanged(id, title,start_question, end_question, word, textAnswer, selectedAnswer, alphabet, emptyWord, canvas);
       }
     
-    saveAnswer(selectedAnswer:string,alphabet:any[],emptyWord:any[],canvas:HTMLCanvasElement){
+    saveAnswer(selectedAnswer:string,alphabet:any[],emptyWord:string[],canvas:HTMLCanvasElement){
         this.selectedAnswer = selectedAnswer;
         this.alphabet = alphabet;
         this.emptyWord = emptyWord;

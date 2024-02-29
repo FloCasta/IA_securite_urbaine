@@ -8,12 +8,12 @@ export class ConnectPairs {
   savedAnswersConnections: number[] = [];
   savedAnswersLines: number[] = [];
 
-  constructor(id: string, title: string, pairs: PairItem[], c?: any[], l?:any[]) {
+  constructor(id: string, title: string, pairs: PairItem[], savedAnswersConnections?: any[], savedAnswersLines?:any[]) {
     this.id = id;
     this.title = title;
     this.pairs = pairs;
-    this.savedAnswersConnections = c || [];
-    this.savedAnswersLines = l || [];
+    this.savedAnswersConnections = savedAnswersConnections || [];
+    this.savedAnswersLines = savedAnswersLines || [];
   }
 
   static fromJSON(jsonData: any): ConnectPairs {
