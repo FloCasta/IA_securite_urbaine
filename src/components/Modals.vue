@@ -1,29 +1,30 @@
 <template>
     <div>
-        <ResultModal ref="result_modal" :openReadOnly=openReadOnly :nWorld=nWorld :nLevel=nLevel :points=points v-show="store.isResultModalVisible" />
-        <HolySentenceModal :previous=previous :next=next :addPoint=addPoint :form="formHs"
-            :isReadOnly="isReadOnly" v-show="store.isHolySentenceModalVisible" />
+        <ResultModal ref="result_modal" :openReadOnly=openReadOnly :nWorld=nWorld :nLevel=nLevel :points=points
+            v-show="store.isResultModalVisible" />
+        <HolySentenceModal :previous=previous :next=next :addPoint=addPoint :form="formHs" :isReadOnly="isReadOnly"
+            v-show="store.isHolySentenceModalVisible" />
         <MultipleChoiceModal :previous=previous :next=next :addPoint=addPoint :form="formMultipleChoice"
             :isReadOnly="isReadOnly" v-show="store.isMultipleChoiceModalVisible" />
-        <DragAndDropModal :previous=previous :next=next :addPoint=addPoint :form="formDaD"
-            :isReadOnly="isReadOnly" v-show="store.isDragAndDropModalVisible" />
+        <DragAndDropModal :previous=previous :next=next :addPoint=addPoint :form="formDaD" :isReadOnly="isReadOnly"
+            v-show="store.isDragAndDropModalVisible" />
         <HeightQuestionModal :previous=previous :next=next :addPoint=addPoint :form="formHeightQuestion"
             :isReadOnly="isReadOnly" v-show="store.isHeightQuestionModalVisible" />
-        <EstimationModal :previous=previous :next=next :addPoint=addPoint :form="formEstimation"
-            :isReadOnly="isReadOnly" v-show="store.isEstimationModalVisible" />
-        <CaptchaModal :previous=previous :next=next :addPoint=addPoint :form="formCaptcha"
-            :isReadOnly="isReadOnly" v-show="store.isCaptchaModalVisible" />
-        <HangedModal :previous=previous :next=next :addPoint=addPoint :form="formHanged"
-            :isReadOnly="isReadOnly" v-show="store.isHangedModalVisible" />
-        <ConnectPairsModal :previous=previous :next=next :addPoint=addPoint :form="formPairs"
-            :isReadOnly="isReadOnly" v-show="store.isConnectPairsModalVisible" />
-        <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard"
-            :isReadOnly="isReadOnly" v-show="store.isFlashCardModalVisible" />
+        <EstimationModal :previous=previous :next=next :addPoint=addPoint :form="formEstimation" :isReadOnly="isReadOnly"
+            v-show="store.isEstimationModalVisible" />
+        <CaptchaModal :previous=previous :next=next :addPoint=addPoint :form="formCaptcha" :isReadOnly="isReadOnly"
+            v-show="store.isCaptchaModalVisible" />
+        <HangedModal :previous=previous :next=next :addPoint=addPoint :form="formHanged" :isReadOnly="isReadOnly"
+            v-show="store.isHangedModalVisible" />
+        <ConnectPairsModal :previous=previous :next=next :addPoint=addPoint :form="formPairs" :isReadOnly="isReadOnly"
+            v-show="store.isConnectPairsModalVisible" />
+        <FlashcardModal :previous=previous :next=next :addPoint=addPoint :form="formFlashcard" :isReadOnly="isReadOnly"
+            v-show="store.isFlashCardModalVisible" />
     </div>
 </template>
   
 <script setup lang="ts">
-import { ref, Ref, onBeforeMount , watch } from 'vue';
+import { ref, Ref, onBeforeMount, watch } from 'vue';
 import { useAlertsStore } from '@/store';
 
 // Import your data files for each world
@@ -109,7 +110,7 @@ const initWorld = () => {
 }
 
 watch(() => props.world, initWorld, { immediate: true });
-window.addEventListener('beforeunload', () => { store.closeAllModals();});
+window.addEventListener('beforeunload', () => { store.closeAllModals(); });
 
 
 const initQuestionsForWorld = () => {
@@ -155,7 +156,7 @@ const addPoint = (point: Point) => {
 
 const launchLevel = (l: number, scorePrevious: number, w: number) => {
     nLevel.value = l;
-    isReadOnly.value=false;
+    isReadOnly.value = false;
     nWorld.value = w;
     initWorld();
     nextQuestion.value = 0;
@@ -164,11 +165,11 @@ const launchLevel = (l: number, scorePrevious: number, w: number) => {
     initQuestionsForWorld();
     if (scorePrevious >= 3 || nLevel.value == 1) {
 
-        
+
         for (let i = 0; i < 5; i++) {
             currentQuestions[i] = listQuestions[i + (5 * (nLevel.value - 1))]
         }
-        
+
         points.value = []
         store.toggleModals();
         next()
@@ -194,10 +195,10 @@ const next = () => {
     }
 }
 
-const openReadOnly = (form : any) =>{
-    isReadOnly.value=true;
-    currentQuestions=[form];
-    nextQuestion.value=1;
+const openReadOnly = (form: any) => {
+    isReadOnly.value = true;
+    currentQuestions = [form];
+    nextQuestion.value = 1;
     setTimeout(() => { openGame(); }, 50);
 }
 
@@ -239,7 +240,7 @@ const openGame = () => {
             formHanged.value = currentQuestions[nextQuestion.value - 1] as Hanged;
             store.toggleHangedModal();
     }
-       
+
 
 }
 
@@ -357,7 +358,7 @@ h3 {
 }
 
 .question_modal {
-    max-height: 10vh;
+    /* max-height: 10vh; */
     padding: 1vh 4vw;
     display: flex;
     align-items: center;

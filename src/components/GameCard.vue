@@ -66,6 +66,7 @@ const props = defineProps({
     .description {
       margin: .5rem 0;
       color: #011624da;
+      font-size: 0.8rem;
     }
   }
 
@@ -91,5 +92,6 @@ const props = defineProps({
       left: 200%;
     }
   }
-}</style>
+}
+</style>
   

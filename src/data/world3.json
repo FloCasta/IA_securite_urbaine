@@ -268,7 +268,7 @@
       "id": 12,
       "title": "Barre chiffrée",
       "type": "bar_chiffree",
-      "question": "En 2020 quel est le pourcentage de débit frauduleux par transaction ?",
+      "question": "En 2020 quel est le pourcentage de débit frauduleux par transaction bancaire ?",
       "minNumber": 0,
       "maxNumber": 100,
       "increment": 5,
@@ -284,7 +284,7 @@
       "answers": [
         {
           "id": 1,
-          "title": "Les débits frauduleux",
+          "title": "Les fraudes bancaires",
           "img": "/captcha/world3-captcha1.png",
           "response": true
         },
@@ -337,7 +337,7 @@
       "title": "Phrase à trou",
       "type": "holysentence",
       "start_question": "Au cours des dernières décennies, le sentiment de victimation augmente et les crimes et les délits physiques ",
-      "end_question": "(à l’exception des débits frauduleux, impactés par les progrès technologiques).",
+      "end_question": "(à l’exception des fraudes bancaires, impactés par les progrès technologiques).",
       "holy_word": "stagnent",
       "textAnswer": "En effet, la plupart des crimes restent stagnants. Certains diminuent même, comme les homicides. En revanche, la cybercriminalité a tendance a augmenté. "
     }

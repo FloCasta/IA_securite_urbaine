@@ -138,33 +138,33 @@
         },
         {
           "id": 2,
-          "title": "Le masque",
+          "title": "Les perruques",
           "img": "/captcha/world4-captcha2.png",
           "response": true
         },
         {
           "id": 3,
-          "title": "Les perruques",
+          "title": "Les fausses barbes",
           "img": "/captcha/world4-captcha3.png",
           "response": true
         },
         {
           "id": 4,
-          "title": "Les fausses barbes",
+          "title": "Un t-shirt vert",
           "img": "/captcha/world4-captcha4.png",
-          "response": true
+          "response": false
         },
         {
           "id": 5,
-          "title": "Un t-shirt vert",
+          "title": "Une cravatte",
           "img": "/captcha/world4-captcha5.png",
           "response": false
         },
         {
           "id": 6,
-          "title": "Une cravatte",
+          "title": "Le masque",
           "img": "/captcha/world4-captcha6.png",
-          "response": false
+          "response": true
         }
       ]
     },
